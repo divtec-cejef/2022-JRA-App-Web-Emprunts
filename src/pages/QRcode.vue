@@ -12,7 +12,6 @@
     </table>
   </div>
     <hr>
-
     <div class="row">
       <div class="col-md-8">
 
@@ -51,8 +50,10 @@
       </div>
   <div class="card" style="width: 18rem;">
     <qrcode-stream @decode="onDecode" @init="onInit" />
-
   </div>
+  <label for="checkbox">Est-ce un retour</label>
+  <input type="checkbox" id="checkbox" v-model="checked">
+
 </template>
 
 <script>
@@ -61,7 +62,9 @@ export default {
   name: "QRcode",
   data() {
     return {
+      checked: false,
       users: [
+        //Valeurs par defaut pour faire des tests
         {
           id: 1,
           reg: 'B3092130',
@@ -97,8 +100,6 @@ export default {
         date: new Date().toJSON().slice(0, 10).replace(/-/g, '/')
       })
       this.idUser++
-      let audio = await new Audio('http://soundbible.com/mp3/Bike Horn-SoundBible.com-602544869.mp3')
-      audio.play()
       this.alert = 'alert-success'
       this.status = 'Success re-registration!'
       setTimeout(() => {
@@ -110,8 +111,6 @@ export default {
       try {
         await promise
       } catch (error) {
-        let audio = await new Audio('http://soundbible.com/mp3/Industrial Alarm-SoundBible.com-1012301296.mp3')
-        audio.play()
         if (error.name === 'NotAllowedError') {
           this.alert = 'alert-danger'
           this.status = "ERROR: you need to grant camera access permisson"
