@@ -4,7 +4,9 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
+      { path: '', component: () => import('pages/Index.vue') },
+      { path: 'QRcode', component: () => import('pages/QRcode.vue') },
+      { path: 'RFID', component: () => import('pages/RFID.vue') }
     ]
   },
 
