@@ -2,11 +2,9 @@
   <div id="app">
     <table>
       <tr>
-
         <td>
           <span class="table-title"><b>#re-registration event</b></span>
           <br>
-          <span class="table-desc">Made with <span class="vue-font">Vue.js</span></span>
         </td>
       </tr>
     </table>
@@ -38,7 +36,7 @@
                 <td>{{ user.reg }}</td>
                 <td>{{ user.date }}</td>
                 <td>
-                  <a href="#" @click.prevent="deleteUser(index)">x</a>
+                  <a href="#" @click.prevent="deleteScan(index)">x</a>
                 </td>
               </tr>
               </tbody>
@@ -51,18 +49,23 @@
   <div class="card" style="width: 18rem;">
     <qrcode-stream @decode="onDecode" @init="onInit" />
   </div>
-  <label for="checkbox">Est-ce un retour</label>
+
+  <label for="checkbox">Est-ce un retour ? (Si oui, cochez) </label>
   <input type="checkbox" id="checkbox" v-model="checked">
+  <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
+  <label for="checkbox">{{ retouroupas() }}</label>
 
 </template>
 
 <script>
 import { QrcodeStream } from 'vue3-qrcode-reader'
+import QRcode from "pages/QRcode";
 export default {
   name: "QRcode",
   data() {
     return {
       checked: false,
+      test: "",
       users: [
         //Valeurs par defaut pour faire des tests
         {
@@ -90,7 +93,14 @@ export default {
   },
   components: { QrcodeStream },
   methods: {
-    deleteUser(index) {
+    retouroupas(){
+      if(this.checked===true){
+        return this.test="retour";
+      }else{
+        return this.test="pasretour";
+      }
+    },
+    deleteScan(index) {
       this.users.splice(index, 1)
     },
     async onDecode(result) {
