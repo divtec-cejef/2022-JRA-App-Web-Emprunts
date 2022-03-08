@@ -25,6 +25,7 @@ export default {
   },
 
   methods: {
+
     toggleCamera() {
       if(this.isCameraOpen) {
         this.isCameraOpen = false;
