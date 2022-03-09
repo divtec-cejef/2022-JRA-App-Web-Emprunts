@@ -1,17 +1,23 @@
 <template>
-  <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    >
-  </q-page>
+  <h1>Scan QR code</h1>
+
+  <q-btn to="/QRcode">
+    Scanner
+  </q-btn>
+
+  <h1>Scan RFID</h1>
+  <q-btn to="/RFID">
+    Scanner
+  </q-btn>
+
 </template>
 
 <script>
+
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'PageIndex'
+
 })
 </script>
