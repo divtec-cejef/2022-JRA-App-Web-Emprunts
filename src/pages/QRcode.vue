@@ -4,9 +4,9 @@
     <q-btn color="primary" label="Scan" @click="scanImage" />
     <h2>{{ title }}</h2>
     <label for="checkbox">Est-ce un retour ? (Si oui, cochez) </label>
-    <input type="checkbox" id="checkbox" v-model="checked">
+    <input type="checkbox" id="checkbox" v-model="retour">
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
-    <label for="checkbox">{{ retourouemprunt() }}</label>
+    <label for="checkbox">{{ retour ? "retour" : "emprunt" }}</label>
 
   </div>
 </template>
@@ -16,21 +16,13 @@ export default {
   data() {
     return {
       test: "",
-      checked: false,
-      retouroupas: "emprunt",
+      retour: false,
       imageSrc: '',
       title: '', //resultat du QR code scanné
       description: ''
     }
   },
   methods: {
-    retourouemprunt(){
-      if(this.checked===true){
-        return this.retouroupas="retour";
-      }else{
-        return this.retouroupas="emprunt";
-      }
-    },
     scanImage() {
       cordova.plugins.barcodeScanner.scan(
         result => {
@@ -45,7 +37,7 @@ export default {
             result.cancelled +
             '\n' +
             'retour ou emprunt: ' +
-            this.retour
+            (this.retour ? "retour" : "emprunt")
           )
         },
         error => {
