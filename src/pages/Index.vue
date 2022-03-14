@@ -9,6 +9,10 @@
   <q-btn to="/RFID">
     Scanner
   </q-btn>
+  <h1>Scan test</h1>
+  <q-btn to="/page-test">
+    Scanner
+  </q-btn>
 
 </template>
 
