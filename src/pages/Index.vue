@@ -5,8 +5,8 @@
     Scanner
   </q-btn>
 
-  <h1>Scan RFID</h1>
-  <q-btn to="/RFID">
+  <h1>Scan NFC</h1>
+  <q-btn to="/NFC">
     Scanner
   </q-btn>
   <h1>Scan test</h1>

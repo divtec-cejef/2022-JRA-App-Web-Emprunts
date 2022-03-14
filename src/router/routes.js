@@ -6,7 +6,7 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/Index.vue') },
       { path: 'QRcode', component: () => import('pages/QRcode.vue') },
-      { path: 'RFID', component: () => import('pages/RFID.vue') },
+      { path: 'NFC', component: () => import('pages/NFC.vue') },
       { path: 'page-test', component: () => import('pages/page-test.vue') }
     ]
   },

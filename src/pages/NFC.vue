@@ -7,7 +7,7 @@
 
 
 export default {
-  name: 'RFID',
+  name: 'NFC',
   data() {
     return {
 
