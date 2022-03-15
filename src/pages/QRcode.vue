@@ -12,6 +12,7 @@
     <!-- Check Box pour déterminer s'il s'agit d'un retour ou une emprunt -->
     <q-checkbox label="Est-ce un retour ? (Si oui, cochez)" :left-label="true" color="primary" id="checkbox" v-model="retour"  :model-value="retour"/>
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
+    <label>{{ retour ? "retour" : "emprunt" }}</label>
   </div>
   <div class="q-pa-md">
     <q-option-group
@@ -19,9 +20,10 @@
       type="radio"
       v-model="group"
       color="primary"
-
       :model-value="group"
     />
+    <!-- Afficher avec une variable quel choix est sélectionné -->
+    <label>{{ group }}</label>
   </div>
 </template>
 
@@ -32,10 +34,10 @@ import {ref} from "vue";
 export default {
   setup() {
     return {
-      group: ref(null),
+      group: ref('emprunt'),
       options: [
-        { label: 'Retour', value: 'retour', checkedIcon:"task_alt"},
-        { label: 'Emprunt', value: 'emprunt', checkedIcon:"task_alt"}
+        { label: 'Emprunt', value: 'emprunt', checkedIcon:"task_alt"},
+        { label: 'Retour', value: 'retour', checkedIcon:"task_alt"}
       ]
     }
   },
