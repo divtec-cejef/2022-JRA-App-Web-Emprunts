@@ -1,3 +1,9 @@
+<!--
+  Auteur: Sévan Bendit
+  Date: 15.03.2022
+  Description: Page pour scanner une puce NFC
+ -->
+
 <template>
   <div text-center>
       <span v-if="compatible">

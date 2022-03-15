@@ -1,3 +1,9 @@
+<!--
+  Auteur: Sévan Bendit
+  Date: 15.03.2022
+  Description: Page gestion de l'erreur 404
+ -->
+
 <template>
   <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
     <div>

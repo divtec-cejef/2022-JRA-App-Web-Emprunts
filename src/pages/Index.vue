@@ -1,3 +1,9 @@
+<!--
+  Auteur: Sévan Bendit
+  Date: 15.03.2022
+  Description: Page d'accueil de l'application
+ -->
+
 <template>
   <h1>Scan QR code</h1>
 

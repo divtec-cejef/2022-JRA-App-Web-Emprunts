@@ -1,3 +1,9 @@
+<!--
+  Auteur: Sévan Bendit
+  Date: 15.03.2022
+  Description: Page pour scanner un QR code
+ -->
+
 <template>
   <div>
     <h2>Scanner le QR code</h2>
@@ -7,7 +13,6 @@
     <input type="checkbox" id="checkbox" v-model="retour">
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
     <label for="checkbox">{{ retour ? "retour" : "emprunt" }}</label>
-
   </div>
 </template>
 
