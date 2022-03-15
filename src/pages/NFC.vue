@@ -10,7 +10,7 @@
         <h2>Scannez</h2>
         <br>
         <!-- Bouton qui affiche l'historique de scan -->
-        <q-btn @click="dialog = true">Historique</q-btn>
+        <q-btn color="primary" @click="dialog = true">Historique</q-btn>
         <q-dialog v-model="dialog" scrollable>
           <q-card>
             <div>Historique</div>
@@ -36,7 +36,7 @@
     <span v-if="nfc_disabled">
         <h2>Activez le paramètre NFC</h2>
       <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
-      <q-btn v-on:click="showSettings">Activer</q-btn>
+      <q-btn color="primary" v-on:click="showSettings">Activer</q-btn>
       </span>
   </div>
 </template>
