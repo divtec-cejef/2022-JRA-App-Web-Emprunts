@@ -70,6 +70,10 @@ export default {
             '\n' +
             'Etat: ' +
             (this.retour ? "retour" : "emprunt")
+            +
+            '\n' +
+            'Etat: ' +
+            (this.group)
           )
         },
         error => {
