@@ -8,6 +8,7 @@
   <div>
     <h2>Scanner le QR code</h2>
     <q-btn color="primary" label="Scan" @click="scanImage" />
+    <br>
     <!-- Check Box pour déterminer s'il s'agit d'un retour ou une emprunt -->
     <q-checkbox label="Est-ce un retour ? (Si oui, cochez)" :left-label="true" color="primary" id="checkbox" v-model="retour"  :model-value="retour"/>
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
