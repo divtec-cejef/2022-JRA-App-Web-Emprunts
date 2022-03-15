@@ -31,9 +31,13 @@
           </q-card>
         </q-dialog>
       </span>
-    <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
-    <q-btn v-on:click="showSettings" v-else-if="nfc_disabled">Settings</q-btn>
-    <span v-else>Pas disponible</span>
+
+    <!-- Afficher si la focntion NFC du téléhone n'est pas activée -->
+    <span v-if="nfc_disabled">
+        <h2>Activez le paramètre NFC</h2>
+      <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
+      <q-btn v-on:click="showSettings">Activer</q-btn>
+      </span>
   </div>
 </template>
 
@@ -54,7 +58,7 @@ export default {
   /*
   watch:{
     items: function (v) {
-      // Watch push on the items data. If a new item is push save it to the « localStorage ».
+      // Surveillez le push sur les données des éléments. Si un nouvel élément est poussé, il est enregistré dans le " localStorage ".
       localStorage.setItem("scanHistorique", JSON.stringify(this.items));
     }
   },
@@ -74,7 +78,7 @@ export default {
   // Déclaration des méthodes
   methods: {
     registerTagEvent(){
-      // Annulation de l'écoute de l'événement " resume " précédent.
+      // Annulation de l'écoute de l'événement "resume" précédent.
       document.removeEventListener("resume", this.registerTagEvent, false);
 
       if (typeof(nfc) !== "undefined"){
