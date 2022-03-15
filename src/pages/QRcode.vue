@@ -13,10 +13,32 @@
     <q-checkbox label="Est-ce un retour ? (Si oui, cochez)" :left-label="true" color="primary" id="checkbox" v-model="retour"  :model-value="retour"/>
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
   </div>
+  <div class="q-pa-md">
+    <q-option-group
+      :options="options"
+      type="radio"
+      v-model="group"
+      color="primary"
+
+      :model-value="group"
+    />
+  </div>
 </template>
 
 <script>
+// Importation de l'élément "ref"
+import {ref} from "vue";
+
 export default {
+  setup() {
+    return {
+      group: ref(null),
+      options: [
+        { label: 'Retour', value: 'retour', checkedIcon:"task_alt"},
+        { label: 'Emprunt', value: 'emprunt', checkedIcon:"task_alt"}
+      ]
+    }
+  },
   // Nom de la page
   name: 'QRcode',
   // Déclaration des données
