@@ -10,10 +10,8 @@
     <q-btn color="primary" label="Scan" @click="scanImage" />
     <h2>{{ title }}</h2>
     <!-- Check Box pour déterminer s'il s'agit d'un retour ou une emprunt -->
-    <label for="checkbox">Est-ce un retour ? (Si oui, cochez) </label>
-    <input type="checkbox" id="checkbox" v-model="retour">
+    <q-checkbox label="Est-ce un retour ? (Si oui, cochez)" :left-label="true" color="primary" id="checkbox" v-model="retour"  :model-value="retour"/>
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
-    <label for="checkbox">{{ retour ? "retour" : "emprunt" }}</label>
   </div>
 </template>
 
