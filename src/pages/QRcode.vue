@@ -9,6 +9,7 @@
     <h2>Scanner le QR code</h2>
     <q-btn color="primary" label="Scan" @click="scanImage" />
     <h2>{{ title }}</h2>
+    <!-- Check Box pour déterminer s'il s'agit d'un retour ou une emprunt-->
     <label for="checkbox">Est-ce un retour ? (Si oui, cochez) </label>
     <input type="checkbox" id="checkbox" v-model="retour">
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
@@ -18,48 +19,50 @@
 
 <script>
 export default {
+  // Déclaration des données
   data() {
     return {
-      test: "",
       retour: false,
       imageSrc: '',
-      title: '', //resultat du QR code scanné
+      title: '', // resultat du QR code scanné
       description: ''
     }
   },
+  // Déclaration des méthodes
   methods: {
+    // Méthode pour scanner un QR code
     scanImage() {
       cordova.plugins.barcodeScanner.scan(
         result => {
           alert(
-            'Result: ' +
+            'Résultat: ' +
             result.text +
             '\n' +
             'Format: ' +
             result.format +
             '\n' +
-            'Cancelled: ' +
+            'Scan annulé: ' +
             result.cancelled +
             '\n' +
-            'retour ou emprunt: ' +
+            'Etat: ' +
             (this.retour ? "retour" : "emprunt")
           )
         },
         error => {
-          alert('Scanning failed: ' + error)
+          alert('Scan raté: ' + error)
         },
         {
-          preferFrontCamera: false, // iOS and Android
-          showFlipCameraButton: true, // iOS and Android
-          showTorchButton: true, // iOS and Android
-          torchOn: false, // Android, launch with the torch switched on (if available)
-          saveHistory: true, // Android, save scan history (default false)
+          preferFrontCamera: false, // iOS et Android
+          showFlipCameraButton: true, // iOS et Android
+          showTorchButton: true, // iOS et Android
+          torchOn: false, // Android, au lancement le flash est allumé
+          saveHistory: true, // Android, enregistrer l'historique de scan
           prompt: 'Placez le QR code à l\'intérieur de la zone', // Android
-          resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+          resultDisplayDuration: 1000, // Android, affiche le texte scanné pendant 1s en bas avant d'afficher l'alerte
           //formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-          orientation: 'portrait', // Android only (portrait|landscape), default unset so it rotates with the device
+          orientation: 'portrait', // Android uniquement (portrait|landscape), par défaut non réglé pour qu'il tourne avec le téléphone
           disableAnimations: true, // iOS
-          disableSuccessBeep: true // iOS and Android
+          disableSuccessBeep: true // iOS et Android
         }
       )
     }
