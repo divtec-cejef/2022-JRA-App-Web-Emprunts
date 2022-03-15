@@ -9,7 +9,7 @@
     <h2>Scanner le QR code</h2>
     <q-btn color="primary" label="Scan" @click="scanImage" />
     <h2>{{ title }}</h2>
-    <!-- Check Box pour déterminer s'il s'agit d'un retour ou une emprunt-->
+    <!-- Check Box pour déterminer s'il s'agit d'un retour ou une emprunt -->
     <label for="checkbox">Est-ce un retour ? (Si oui, cochez) </label>
     <input type="checkbox" id="checkbox" v-model="retour">
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
@@ -19,6 +19,8 @@
 
 <script>
 export default {
+  // Nom de la page
+  name: 'QRcode',
   // Déclaration des données
   data() {
     return {

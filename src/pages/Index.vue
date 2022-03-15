@@ -27,6 +27,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
+  // Nom de la page
   name: 'PageIndex'
 
 })
