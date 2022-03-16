@@ -32,7 +32,7 @@
         </q-dialog>
       </span>
 
-    <!-- Afficher si la focntion NFC du téléhone n'est pas activée -->
+    <!-- Afficher si la fonction NFC du téléphone n'est pas activée -->
     <span v-if="nfc_disabled">
         <h2>Activez le paramètre NFC</h2>
       <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
