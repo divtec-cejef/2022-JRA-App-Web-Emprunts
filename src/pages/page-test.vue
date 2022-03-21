@@ -66,13 +66,16 @@ export default {
     getFromAPI() {
       let id = this.text
       api.get("/ELT/rest/idreq.php?id="+id).then(res => {
-        // Afficher le résltat de la rquête avec l'ID
+        // Afficher le résltat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
         this.res = res.data.split(",")[1]
       })
     },
     postEmprunt(){
-      api.post("/ELT/rest/borrow.php").then(function (response) {
+      api.post("/ELT/rest/borrow.php", {
+        idUser: this.idEtu,
+        idDevice: this.idDevice
+      }).then(function (response) {
         console.log('CREATION OK', response)
       })
 
