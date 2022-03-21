@@ -32,7 +32,7 @@
 
   <p>Résulat du QRcode: {{ title }}</p>
 
-  <q-btn color="primary" @click="getFromAPI">
+  <q-btn color="primary" @click="getEtudiantFromAPI">
     Tester
   </q-btn>
   <p>Réponse: {{ res }}</p>
@@ -109,7 +109,7 @@ export default {
         }
       )
     },
-    getFromAPI() {
+    getEtudiantFromAPI() {
       let id = this.title
       api.get("/ELT/rest/idreq.php?id="+id).then(res => {
         // Afficher le résltat de la rquête avec l'ID
