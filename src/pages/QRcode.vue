@@ -15,7 +15,7 @@
     <label>{{ retour ? "retour" : "emprunt" }}</label>
   </div>
 
-  <p>Résulat du QRcode: {{ title }}</p>
+
 
   <div class="q-pa-md">
     <q-option-group
@@ -28,6 +28,14 @@
     <!-- Afficher avec une variable quel choix est sélectionné -->
     <label>{{ group }}</label>
   </div>
+
+
+  <p>Résulat du QRcode: {{ title }}</p>
+
+  <q-btn color="primary" @click="getFromAPI">
+    Tester
+  </q-btn>
+  <p>Réponse: {{ res }}</p>
 </template>
 
 <script>
@@ -51,6 +59,7 @@ export default {
   // Déclaration des données
   data() {
     return {
+      res: '',
       retour: false,
       imageSrc: '',
       title: '', // resultat du QR code scanné
@@ -99,6 +108,14 @@ export default {
           disableSuccessBeep: true // iOS et Android
         }
       )
+    },
+    getFromAPI() {
+      let id = this.title
+      api.get("/ELT/rest/idreq.php?id="+id).then(res => {
+        // Afficher le résltat de la rquête avec l'ID
+        // Afficher uniquement le nom et prénom
+        this.res = res.data.split(",")[1]
+      })
     }
   }
 }
