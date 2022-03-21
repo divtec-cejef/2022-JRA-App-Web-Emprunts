@@ -20,6 +20,17 @@
     <div class="q-gutter-md" style="max-width: 300px">
       <q-input v-model="idMat" :model-value="idMat" label="ID matériel" />
       <q-input v-model="idEtu" :model-value="idEtu" label="ID étudiant" />
+      <div class="q-pa-md">
+        <q-option-group
+          :options="options"
+          type="radio"
+          v-model="group"
+          color="primary"
+          :model-value="group"
+        />
+        <!-- Afficher avec une variable quel choix est sélectionné -->
+        <label>{{ group }}</label>
+      </div>
       <q-btn color="primary" @click="postEmprunt">
         Tester
       </q-btn>
@@ -31,8 +42,18 @@
 <script>
 
 import {api} from "boot/axios";
+import {ref} from "vue";
 
 export default {
+  setup() {
+    return {
+      group: ref('emprunt'),
+      options: [
+        { label: 'Emprunt', value: 'emprunt', checkedIcon:"task_alt"},
+        { label: 'Retour', value: 'retour', checkedIcon:"task_alt"}
+      ]
+    }
+  },
   data () {
     return {
       text: '',
@@ -51,6 +72,9 @@ export default {
       })
     },
     postEmprunt(){
+      api.post("/ELT/rest/borrow.php").then(function (response) {
+        console.log('CREATION OK', response)
+      })
 
     }
   }
