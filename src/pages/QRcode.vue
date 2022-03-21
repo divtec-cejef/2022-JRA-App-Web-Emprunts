@@ -40,9 +40,9 @@
 
 <script>
 // Importation de l'élément "ref"
-import {ref} from "vue";
+import {ref} from 'vue';
 // Importation de l'élément "api"
-import { api } from 'boot/axios'
+import { api } from 'boot/axios';
 
 export default {
   setup() {
