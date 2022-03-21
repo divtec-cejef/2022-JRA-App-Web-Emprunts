@@ -14,6 +14,9 @@
     <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
     <label>{{ retour ? "retour" : "emprunt" }}</label>
   </div>
+
+  <p>Résulat du QRcode: {{ title }}</p>
+
   <div class="q-pa-md">
     <q-option-group
       :options="options"
@@ -60,6 +63,7 @@ export default {
     scanImage() {
       cordova.plugins.barcodeScanner.scan(
         result => {
+          this.title = result.text;
           alert(
             'Résultat: ' +
             result.text +
