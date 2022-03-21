@@ -3,7 +3,7 @@
   <div class="q-pa-md">
     <div class="q-gutter-md" style="max-width: 300px">
       <q-input v-model="text" :model-value="text" label="ID étudiant" />
-      <q-btn color="primary">
+      <q-btn color="primary" @click="getFromAPI">
         Tester
       </q-btn>
     </div>
@@ -13,12 +13,20 @@
 
 <script>
 
-
+import {api} from "boot/axios";
 
 export default {
   data () {
     return {
       text: ''
+    }
+  },
+  methods: {
+    getFromAPI() {
+      let id = this.text
+      api.get("/ELT/rest/idreq.php?id="+id).then(res => {
+        console.log('CREATION OK', res)
+      })
     }
   }
 }
