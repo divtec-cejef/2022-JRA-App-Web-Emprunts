@@ -15,9 +15,9 @@
   <q-btn color="primary" to="/NFC">
     Scanner
   </q-btn>
-  <h1>Scan test</h1>
+  <h1>Page test</h1>
   <q-btn color="primary" to="/page-test">
-    Scanner
+    Tester
   </q-btn>
 
 </template>

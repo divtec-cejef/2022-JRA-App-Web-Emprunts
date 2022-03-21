@@ -8,7 +8,7 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-  baseURL: 'https://ateliers.divtec.ch/ELT/rest',
+  baseURL: 'https://demo.gefopro.ch',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json'
