@@ -5,6 +5,10 @@
  -->
 
 <template>
+  <h4>Se connecter</h4>
+  <q-btn color="primary" to="/authentification">
+    Authentifier
+  </q-btn>
   <h1>Scan QR code</h1>
 
   <q-btn color="primary" to="/QRcode">
