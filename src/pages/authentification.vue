@@ -19,12 +19,14 @@
       </span>
   </div>
   <br>
-  <q-btn color="primary" label="Scan" @click="scanImage" />
+  <p>{{this.etudiant}}</p>
+  <q-btn color="primary" label="Scan" @click="scanEtudiant" />
   <p>Résulat du QRcode: {{ idEtu }}</p>
   <q-btn color="primary" label="Se connecter" @click="getEtudiantFromAPI" />
   <p>Nom de l'étudiant: {{ nomEtu }}</p>
   <span v-if="nomEtu">
     <p>OK</p>
+
     {{changerPage()}}
   </span>
 </template>
@@ -32,10 +34,19 @@
 <script>
 
 import {api} from "boot/axios";
+import { mapGetters } from 'vuex'
 
 export default {
   // Nom de la page
   name: 'authentification',
+
+  computed: {
+
+    etudiant(){
+      'etudiantID'
+    }
+  },
+
   // Déclaration des données
   data(){
     return {
@@ -71,10 +82,10 @@ export default {
   // Déclaration des méthodes
   methods: {
     changerPage(){
-      this.$router.push('/')
+      this.$router.push('/QRcode')
     },
     // Méthode pour scanner un QR code
-    scanImage() {
+    scanEtudiant() {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idEtu = result.text;
