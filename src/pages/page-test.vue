@@ -3,7 +3,7 @@
   <h4>Trouver un étudiant</h4>
   <p>id: 73BE4C03</p>
   <!-- Afficher le résultat de la requête pour trouver l'étudiant -->
-  <p>Réponse: {{ res }}</p>
+  <p>Réponse: {{ resEtu }}</p>
 
   <div class="q-pa-md">
     <div class="q-gutter-md" style="max-width: 300px">
@@ -34,7 +34,7 @@
       <q-btn color="primary" @click="postEmprunt">
         Tester
       </q-btn>
-      <p>Réponse: {{ reponse }}</p>
+      <p>Réponse: {{ resEmp }}</p>
     </div>
   </div>
 
@@ -58,7 +58,8 @@ export default {
   data() {
     return {
       text: '',
-      res: '',
+      resEtu: '',
+      resEmp: null,
       reponse: '',
       idEtu: '',
       idMat: ''
@@ -67,19 +68,19 @@ export default {
   methods: {
     getFromAPI() {
       let id = this.text
-      api.get("/ELT/rest/idreq.php?id=" + id).then(res => {
+      api.get("/ELT/rest/idreq.php?id=" + id).then(resEtu => {
         // Afficher le résltat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
-        this.res = res //.data.split(",")[1]
+        this.resEtu = resEtu.data.split(",")[1]
       })
     },
     postEmprunt() {
-      //idUser: "73be4c04"
+      //idUser: "73be4c03"
       //idDevice: "2bf8991d"
       let formData = new FormData();
 
-      formData.append('idUser', '73be4c03')
-      formData.append('idDevice', '2bf8991d')
+      formData.append('idUser', this.idEtu)
+      formData.append('idDevice', this.idMat)
 
       api.post("/ELT/rest/borrow.php",
         formData,
@@ -88,8 +89,8 @@ export default {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         }
-      ).then((res) => {
-        console.log(res)
+      ).then((resEmp) => {
+        this.resEmp = resEmp
       }).catch((err) => {
         console.error(err)
       })
