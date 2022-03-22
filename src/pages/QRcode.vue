@@ -7,34 +7,37 @@
 <template>
   <div>
     <h2>Scannez l'étudiant</h2>
+    <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant -->
     <q-btn color="primary" label="Scan" @click="scanEtudiant" />
+    <!-- Retourne l'ID de l'étudiant scanné -->
     <p>ID de l'étudiant: {{ idEtu }}</p>
 
     <h2>Scannez le matériel</h2>
+    <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel -->
     <q-btn color="primary" label="Scan" @click="scanMatériel" />
+    <!-- Retourne l'ID du matériel scanné -->
     <p>ID du matériel: {{ idMat }}</p>
-
   </div>
 
+  <!-- Boutons radios pour choisir si c'est un emprunt ou un retour -->
   <div class="q-pa-md">
     <q-option-group
       :options="options"
       type="radio"
-      v-model="group"
+      v-model="empRet"
       color="primary"
-      :model-value="group"
+      :model-value="empRet"
     />
     <!-- Afficher avec une variable quel choix est sélectionné -->
-    <label>{{ group }}</label>
+    <label>{{ empRet }}</label>
   </div>
 
-
-
-
+  <!-- Bouton pour envoyer la requête POST -->
   <q-btn color="primary" @click="postEmprunt">
-    Tester
+    Envoyer
   </q-btn>
-  <p>Réponse: {{ resEmp }}</p>
+  <!-- Afficher le résultat de la requête -->
+  <p>Résultat: {{ resEmp }}</p>
 </template>
 
 <script>
@@ -46,7 +49,7 @@ import { api } from 'boot/axios';
 export default {
   setup() {
     return {
-      group: ref('emprunt'),
+      empRet: ref('emprunt'),
       options: [
         { label: 'Emprunt', value: 'emprunt', checkedIcon:"task_alt"},
         { label: 'Retour', value: 'retour', checkedIcon:"task_alt"}
@@ -74,7 +77,6 @@ export default {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idEtu = result.text;
-
         },
         error => {
           alert('Scan raté: ' + error)
@@ -99,7 +101,6 @@ export default {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idMat = result.text;
-
         },
         error => {
           alert('Scan raté: ' + error)
@@ -121,17 +122,25 @@ export default {
     },
 
     postEmprunt() {
-      this.resEmp=null;
+      // Réinitialser la variable avec aucune valeur dedans
+      this.resEmp = null;
+
       //idUser: "73be4c03"
       //idDevice: "2bf8991d"
+      // Création d'un formulaire pour envoyer dans la requête
       let formData = new FormData();
 
+      // Ajout des données dans le formulaire
       formData.append('idUser', this.idEtu)
       formData.append('idDevice', this.idMat)
-      if(this.group==="retour")
+
+      // Ajout d'un paramètre uniquement si le bouton "Retour" est choisi
+      if(this.empRet==="retour")
         formData.append('ret', '')
 
+      // Création de la requête complète
       api.post("/ELT/rest/borrow.php",
+        // Paramètres de la requête
         formData,
         {
           headers: {
@@ -144,6 +153,7 @@ export default {
         console.error(err)
       })
     },
+    // Méthode pour obtenir le nom de l'étudiant depuis son ID
     getEtudiantFromAPI() {
       let id = this.title
       api.get("/ELT/rest/idreq.php?id="+id).then(res => {
