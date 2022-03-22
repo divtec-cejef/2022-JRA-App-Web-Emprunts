@@ -75,12 +75,15 @@ export default {
       })
     },
     postEmprunt() {
+      this.resEmp=null;
       //idUser: "73be4c03"
       //idDevice: "2bf8991d"
       let formData = new FormData();
 
       formData.append('idUser', this.idEtu)
       formData.append('idDevice', this.idMat)
+      if(this.group==="retour")
+      formData.append('ret', '')
 
       api.post("/ELT/rest/borrow.php",
         formData,
