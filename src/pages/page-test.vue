@@ -7,19 +7,19 @@
 
   <div class="q-pa-md">
     <div class="q-gutter-md" style="max-width: 300px">
-      <q-input v-model="text" :model-value="text" label="ID étudiant" />
+      <q-input v-model="text" :model-value="text" label="ID étudiant"/>
       <q-btn color="primary" @click="getFromAPI">
         Tester
       </q-btn>
     </div>
   </div>
-  <q-separator style="height: 5px" color="dark" inset />
+  <q-separator style="height: 5px" color="dark" inset/>
 
   <h4>Faire un emprunt</h4>
   <div class="q-pa-md">
     <div class="q-gutter-md" style="max-width: 300px">
-      <q-input v-model="idMat" :model-value="idMat" label="ID matériel" />
-      <q-input v-model="idEtu" :model-value="idEtu" label="ID étudiant" />
+      <q-input v-model="idMat" :model-value="idMat" label="ID matériel"/>
+      <q-input v-model="idEtu" :model-value="idEtu" label="ID étudiant"/>
       <div class="q-pa-md">
         <q-option-group
           :options="options"
@@ -44,19 +44,18 @@
 
 import {api} from "boot/axios";
 import {ref} from "vue";
-import qs from "qs";
 
 export default {
   setup() {
     return {
       group: ref('emprunt'),
       options: [
-        { label: 'Emprunt', value: 'emprunt', checkedIcon:"task_alt"},
-        { label: 'Retour', value: 'retour', checkedIcon:"task_alt"}
+        {label: 'Emprunt', value: 'emprunt', checkedIcon: "task_alt"},
+        {label: 'Retour', value: 'retour', checkedIcon: "task_alt"}
       ]
     }
   },
-  data () {
+  data() {
     return {
       text: '',
       res: '',
@@ -68,28 +67,34 @@ export default {
   methods: {
     getFromAPI() {
       let id = this.text
-      api.get("/ELT/rest/idreq.php?id="+id).then(res => {
+      api.get("/ELT/rest/idreq.php?id=" + id).then(res => {
         // Afficher le résltat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
         this.res = res //.data.split(",")[1]
       })
     },
-    postEmprunt(){
+    postEmprunt() {
       //idUser: "73be4c04"
       //idDevice: "2bf8991d"
       let formData = new FormData();
 
-      formData.append('idUser', '73be4c04');
-      formData.append('idDevice', '2bf8991d');
-      formData.append('ret', 'true');
-
+      formData.append('idUser', '73be4c03')
+      formData.append('idDevice', '2bf8991d')
 
       api.post("/ELT/rest/borrow.php",
-        formData,{
-
-      });
-
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      ).then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.error(err)
+      })
     }
   }
+
 }
 </script>
