@@ -75,11 +75,10 @@ export default {
       })
     },
     postEmprunt(){
-      api.post("/ELT/rest/borrow.php", qs.stringify({
-        idUser: this.idEtu,
-        idDevice: this.idDevice,
-        ret: true
-      })).then(function (reponse) {
+      const user = { idUser: "73be4c04" };
+      const device = { idDevice: "2bf8991d" };
+      api.post("/ELT/rest/borrow.php", user, device)
+        .then(function (reponse) {
         this.reponse = reponse
         console.log('CREATION OK', reponse)
       })
