@@ -39,6 +39,9 @@
       <q-btn color="primary" v-on:click="showSettings">Activer</q-btn>
       </span>
   </div>
+  <br>
+  <q-btn color="primary" label="Scan" @click="scanImage" />
+  <p>Résulat du QRcode: {{ title }}</p>
 </template>
 
 <script>
@@ -52,6 +55,7 @@ export default {
       compatible: true,
       nfc_disabled: false,
       dialog: false,
+      title: '', // resultat du QR code scanné
       items: JSON.parse((localStorage.getItem("scanHistorique")||"[]")),
     }
   },
@@ -77,6 +81,47 @@ export default {
 
   // Déclaration des méthodes
   methods: {
+    // Méthode pour scanner un QR code
+    scanImage() {
+      cordova.plugins.barcodeScanner.scan(
+        result => {
+          this.title = result.text;
+          alert(
+            'Résultat: ' +
+            result.text +
+            '\n' +
+            'Format: ' +
+            result.format +
+            '\n' +
+            'Scan annulé: ' +
+            result.cancelled +
+            '\n' +
+            'Etat: ' +
+            (this.retour ? "retour" : "emprunt")
+            +
+            '\n' +
+            'Etat: ' +
+            (this.group)
+          )
+        },
+        error => {
+          alert('Scan raté: ' + error)
+        },
+        {
+          preferFrontCamera: false, // iOS et Android
+          showFlipCameraButton: true, // iOS et Android
+          showTorchButton: true, // iOS et Android
+          torchOn: false, // Android, au lancement le flash est allumé
+          saveHistory: true, // Android, enregistrer l'historique de scan
+          prompt: 'Placez le QR code à l\'intérieur de la zone', // Android
+          resultDisplayDuration: 1000, // Android, affiche le texte scanné pendant 1s en bas avant d'afficher l'alerte
+          //formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+          orientation: 'portrait', // Android uniquement (portrait|landscape), par défaut non réglé pour qu'il tourne avec le téléphone
+          disableAnimations: true, // iOS
+          disableSuccessBeep: true // iOS et Android
+        }
+      )
+    },
     registerTagEvent(){
       // Annulation de l'écoute de l'événement "resume" précédent.
       document.removeEventListener("resume", this.registerTagEvent, false);
