@@ -6,16 +6,15 @@
 
 <template>
   <div>
-    <h2>Scanner le QR code</h2>
-    <q-btn color="primary" label="Scan" @click="scanImage" />
-    <br>
-    <!-- Check Box pour déterminer s'il s'agit d'un retour ou une emprunt -->
-    <q-checkbox label="Est-ce un retour ? (Si oui, cochez)" :left-label="true" color="primary" id="checkbox" v-model="retour"  :model-value="retour"/>
-    <!-- Afficher avec une variable si la case est cochée (true) ou pas (false) -->
-    <label>{{ retour ? "retour" : "emprunt" }}</label>
+    <h2>Scannez l'étudiant</h2>
+    <q-btn color="primary" label="Scan" @click="scanEtudiant" />
+    <p>ID de l'étudiant: {{ idEtu }}</p>
+
+    <h2>Scannez le matériel</h2>
+    <q-btn color="primary" label="Scan" @click="scanMatériel" />
+    <p>ID du matériel: {{ idMat }}</p>
+
   </div>
-
-
 
   <div class="q-pa-md">
     <q-option-group
@@ -30,12 +29,12 @@
   </div>
 
 
-  <p>Résulat du QRcode: {{ title }}</p>
 
-  <q-btn color="primary" @click="getEtudiantFromAPI">
+
+  <q-btn color="primary" @click="postEmprunt">
     Tester
   </q-btn>
-  <p>Réponse: {{ res }}</p>
+  <p>Réponse: {{ resEmp }}</p>
 </template>
 
 <script>
@@ -62,34 +61,20 @@ export default {
       res: '',
       retour: false,
       imageSrc: '',
-      title: '', // resultat du QR code scanné
+      resEmp: null,
+      idEtu: '', // resultat du QR code scanné
+      idMat: '', // resultat du QR code scanné
       description: ''
     }
   },
   // Déclaration des méthodes
   methods: {
-    // Méthode pour scanner un QR code
-    scanImage() {
+    // Méthode pour scanner un QR code de l'étudiant
+    scanEtudiant() {
       cordova.plugins.barcodeScanner.scan(
         result => {
-          this.title = result.text;
-          alert(
-            'Résultat: ' +
-            result.text +
-            '\n' +
-            'Format: ' +
-            result.format +
-            '\n' +
-            'Scan annulé: ' +
-            result.cancelled +
-            '\n' +
-            'Etat: ' +
-            (this.retour ? "retour" : "emprunt")
-            +
-            '\n' +
-            'Etat: ' +
-            (this.group)
-          )
+          this.idEtu = result.text;
+
         },
         error => {
           alert('Scan raté: ' + error)
@@ -108,6 +93,56 @@ export default {
           disableSuccessBeep: true // iOS et Android
         }
       )
+    },
+    // Méthode pour scanner un QR code de l'étudiant
+    scanMatériel() {
+      cordova.plugins.barcodeScanner.scan(
+        result => {
+          this.idMat = result.text;
+
+        },
+        error => {
+          alert('Scan raté: ' + error)
+        },
+        {
+          preferFrontCamera: false, // iOS et Android
+          showFlipCameraButton: true, // iOS et Android
+          showTorchButton: true, // iOS et Android
+          torchOn: false, // Android, au lancement le flash est allumé
+          saveHistory: true, // Android, enregistrer l'historique de scan
+          prompt: 'Placez le QR code à l\'intérieur de la zone', // Android
+          resultDisplayDuration: 1000, // Android, affiche le texte scanné pendant 1s en bas avant d'afficher l'alerte
+          //formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+          orientation: 'portrait', // Android uniquement (portrait|landscape), par défaut non réglé pour qu'il tourne avec le téléphone
+          disableAnimations: true, // iOS
+          disableSuccessBeep: true // iOS et Android
+        }
+      )
+    },
+
+    postEmprunt() {
+      this.resEmp=null;
+      //idUser: "73be4c03"
+      //idDevice: "2bf8991d"
+      let formData = new FormData();
+
+      formData.append('idUser', this.idEtu)
+      formData.append('idDevice', this.idMat)
+      if(this.group==="retour")
+        formData.append('ret', '')
+
+      api.post("/ELT/rest/borrow.php",
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      ).then((resEmp) => {
+        this.resEmp = resEmp
+      }).catch((err) => {
+        console.error(err)
+      })
     },
     getEtudiantFromAPI() {
       let id = this.title
