@@ -75,16 +75,19 @@ export default {
       })
     },
     postEmprunt(){
-      const user = { idUser: "73be4c04" };
-      const device = { idDevice: "2bf8991d" };
-      api.post("/ELT/rest/borrow.php", user, device)
-        .then(function (reponse) {
-        this.reponse = reponse
-        console.log('CREATION OK', reponse)
-      })
-        .catch(function (error){
-          console.log(error.reponse)
-        })
+      //idUser: "73be4c04"
+      //idDevice: "2bf8991d"
+      let formData = new FormData();
+
+      formData.append('idUser', '73be4c04');
+      formData.append('idDevice', '2bf8991d');
+      formData.append('ret', 'true');
+
+
+      api.post("/ELT/rest/borrow.php",
+        formData,{
+
+      });
 
     }
   }
