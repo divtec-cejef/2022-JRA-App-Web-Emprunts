@@ -48,7 +48,7 @@
 
 export default {
   // Nom de la page
-  name: 'NFC',
+  name: 'NFC-QRcode',
   // Déclaration des données
   data(){
     return {
