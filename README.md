@@ -6,28 +6,26 @@ Application pour la gestion d'emprunt de matériels
 ```bash
 npm install
 ```
-
-1.	Ouvrir le dossier du projet Quasar dans le terminal
-2.	Ajouter cordova au projet
+1.	Ajouter cordova au projet
 
 ```quasar mode add cordova```
 
-3.	What is the Cordova app id ?
+2.	What is the Cordova app id ?
 
 ```ch.divtec.bendsev.emprunts```
 
-4.	Aller dans le nouveau dossier src-cordova
+3.	Aller dans le nouveau dossier src-cordova
 
 ```cd src-cordova```
 
-5.	Ajouter Android au projet Cordova
+4.	Ajouter Android au projet Cordova
 
 ```cordova platform add android```
 
 
 ```cordova platform add ios```
 
-6.	Ajouter les plugins
+5.	Ajouter les plugins
 
 ```cordova plugin add phonegap-plugin-barcodescanner```
 
