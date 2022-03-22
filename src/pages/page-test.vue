@@ -34,6 +34,7 @@
       <q-btn color="primary" @click="postEmprunt">
         Tester
       </q-btn>
+      <p>Réponse: {{ reponse }}</p>
     </div>
   </div>
 
@@ -43,6 +44,7 @@
 
 import {api} from "boot/axios";
 import {ref} from "vue";
+import qs from "qs";
 
 export default {
   setup() {
@@ -58,6 +60,7 @@ export default {
     return {
       text: '',
       res: '',
+      reponse: '',
       idEtu: '',
       idMat: ''
     }
@@ -68,16 +71,21 @@ export default {
       api.get("/ELT/rest/idreq.php?id="+id).then(res => {
         // Afficher le résltat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
-        this.res = res.data.split(",")[1]
+        this.res = res //.data.split(",")[1]
       })
     },
     postEmprunt(){
-      api.post("/ELT/rest/borrow.php", {
+      api.post("/ELT/rest/borrow.php", qs.stringify({
         idUser: this.idEtu,
-        idDevice: this.idDevice
-      }).then(function (response) {
-        console.log('CREATION OK', response)
+        idDevice: this.idDevice,
+        ret: true
+      })).then(function (reponse) {
+        this.reponse = reponse
+        console.log('CREATION OK', reponse)
       })
+        .catch(function (error){
+          console.log(error.reponse)
+        })
 
     }
   }

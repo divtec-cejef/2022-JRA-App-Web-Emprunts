@@ -15,6 +15,10 @@
   <q-btn color="primary" to="/NFC">
     Scanner
   </q-btn>
+  <h1>Scan NFC et QRcode</h1>
+  <q-btn color="primary" to="/NFC-QRcode">
+    Scanner
+  </q-btn>
   <h1>Page test</h1>
   <q-btn color="primary" to="/page-test">
     Tester

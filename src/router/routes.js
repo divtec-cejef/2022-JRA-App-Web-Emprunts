@@ -7,6 +7,7 @@ const routes = [
       { path: '', component: () => import('pages/Index.vue') },
       { path: 'QRcode', component: () => import('pages/QRcode.vue') },
       { path: 'NFC', component: () => import('pages/NFC.vue') },
+      { path: 'NFC-QRcode', component: () => import('pages/NFC-QRcode.vue') },
       { path: 'page-test', component: () => import('pages/page-test.vue') }
     ]
   },
