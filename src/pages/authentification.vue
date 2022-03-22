@@ -78,16 +78,7 @@ export default {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idEtu = result.text;
-          alert(
-            'Résultat: ' +
-            result.text +
-            '\n' +
-            'Format: ' +
-            result.format +
-            '\n' +
-            'Scan annulé: ' +
-            result.cancelled
-          )
+
         },
         error => {
           alert('Scan raté: ' + error)
