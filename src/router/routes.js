@@ -28,6 +28,11 @@ const routes = [
         path: '/ens-app',
         component: () => import('pages/EnseignantsApprentis.vue'),
         meta: { roles: [ROLES.ENSEIGNANT, ROLES.APPRENTI] }
+      },
+      { // enseignants et apprentis
+        path: '/gestion',
+        component: () => import('pages/Gestion.vue'),
+        meta: { roles: [ROLES.ENSEIGNANT, ROLES.APPRENTI, ROLES.SECRETAIRE, ROLES.COORDINATEUR] }
       }
     ]
   },
