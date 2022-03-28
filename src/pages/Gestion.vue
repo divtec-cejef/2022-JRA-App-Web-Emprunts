@@ -67,7 +67,7 @@
 <script>
 // Importation de l'élément "ref"
 import { defineComponent, ref } from 'vue'
-import { api } from 'boot/axios'
+import { apiGeFoPro } from 'boot/axios'
 
 export default defineComponent({
   setup () {
@@ -156,6 +156,7 @@ export default defineComponent({
     },
     showSettings () {
       // Ouvre les paramètres du téléphone pour activer les paramètres NfC
+      // eslint-disable-next-line no-undef
       nfc.showSettings()
       // Pour rafraîchir l'état du NFC, nous ajoutons un écouteur à l'événement "resume".
       // L'événement "resume" est déclenché par Cordova lorsque l'application est relancée.
@@ -164,7 +165,7 @@ export default defineComponent({
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
     getEtudiantFromAPI () {
       const id = this.idEtu
-      api.get('/ELT/rest/idreq.php?id=' + id).then(nomEtu => {
+      apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(nomEtu => {
         // Afficher le résltat de la rquête avec l'ID
         // Afficher uniquement le nom et prénom
         this.nomEtu = nomEtu.data.split(',')[1]
@@ -231,7 +232,7 @@ export default defineComponent({
       // Ajout d'un paramètre uniquement si le bouton "Retour" est choisi
       if (this.empRet === 'retourner') { formData.append('ret', '') }
       // Création de la requête complète
-      api.post('/ELT/rest/borrow.php',
+      apiGeFoPro.post('/ELT/rest/borrow.php',
         // Paramètres de la requête
         formData,
         {

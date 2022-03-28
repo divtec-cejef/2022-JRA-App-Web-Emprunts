@@ -16,6 +16,13 @@ const api = axios.create({
   }
 })
 
+const apiGeFoPro = axios.create({
+  baseURL: 'https://demo.gefopro.ch',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }})
+
 /**
  * Test si l'expiration du token et plus petite que la limite fixée
  * par rapport à l'heure actuelle.
@@ -76,4 +83,4 @@ export default boot(({ app, store }) => {
   //       so you can easily perform requests against your app's API
 })
 
-export { api }
+export { api, apiGeFoPro }
