@@ -96,6 +96,12 @@ export default defineComponent({
           icone: 'manage_accounts',
           lien: '/ens-app',
           roles: [ROLES.ENSEIGNANT, ROLES.APPRENTI]
+        },
+        {
+          titre: 'Emprunt et retour',
+          icone: 'manage_accounts',
+          lien: '/gestion',
+          roles: [ROLES.ENSEIGNANT, ROLES.APPRENTI, ROLES.COORDINATEUR, ROLES.SECRETAIRE]
         }
       ]
     }
