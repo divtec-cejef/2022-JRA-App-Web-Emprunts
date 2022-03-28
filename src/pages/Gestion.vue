@@ -6,8 +6,8 @@
 
 <template>
 
-  <div>
-    <div class="q-gutter-md" style="max-width: 200px">
+  <div class="etudiant">
+    <div style="max-width: 200px">
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant"/>
     </div>
     <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant -->
@@ -15,9 +15,9 @@
     <!-- Retourne l'ID de l'étudiant scanné -->
     <p>ID de l'étudiant: {{ idEtu }}</p>
   </div>
-  <div>
-    <div class="q-gutter-md" style="max-width: 200px">
-      <q-input v-model="idMat" :model-value="idMat" label="ID matériel"/>
+  <div class="materiel">
+    <div style="max-width: 200px">
+      <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"/>
     </div>
     <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel -->
     <q-btn color="primary" label="Scan" @click="scanMatériel" />
@@ -164,3 +164,14 @@ export default defineComponent({
   }
 })
 </script>
+
+<style>
+.etudiant{
+  position: absolute;
+  left: 7.2%;
+  right: 43.73%;
+  top: 19.33%;
+  bottom: 71.8%;
+}
+
+</style>

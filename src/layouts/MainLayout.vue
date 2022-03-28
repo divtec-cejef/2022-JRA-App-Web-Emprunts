@@ -2,15 +2,6 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="bg-secondary">
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
         <q-toolbar-title>
           DIVTEC APP
         </q-toolbar-title>
@@ -28,27 +19,6 @@
         </div>
       </q-toolbar>
     </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Menu principal
-        </q-item-label>
-
-        <MenuLiens
-          v-for="lien in liensUtilisateur"
-          :key="lien.titre"
-          v-bind="lien"
-        />
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -56,7 +26,6 @@
 </template>
 
 <script>
-import MenuLiens from 'components/MenuLiens.vue'
 import { ROLES, utilisateurEstAutorise } from 'src/functions/auth'
 import { defineComponent, ref } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
@@ -111,9 +80,6 @@ export default defineComponent({
     liensUtilisateur () {
       return this.liens.filter(lien => utilisateurEstAutorise(this.utilisateur, lien.roles))
     }
-  },
-  components: {
-    MenuLiens
   },
   methods: {
     ...mapActions('auth', ['logout'])
