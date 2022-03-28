@@ -6,27 +6,34 @@
 
 <template>
 
-  <div class="etudiant">
-    <div style="max-width: 200px">
+  <span v-if="compatible">
+    <div class="flex flex-center q-my-md q-mt-xl">
+    <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant"/>
     </div>
-    <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant -->
-    <q-btn color="primary" label="Scan" @click="scanEtudiant" />
-    <!-- Retourne l'ID de l'étudiant scanné -->
-    <p>ID de l'étudiant: {{ idEtu }}</p>
+      <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant -->
+    <q-btn color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant" />
+      <!-- Retourne l'ID de l'étudiant scanné -->
+    <p hidden>ID de l'étudiant: {{ idEtu }}</p>
   </div>
-  <div class="materiel">
-    <div style="max-width: 200px">
+  <div class="flex flex-center q-my-md">
+    <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"/>
     </div>
     <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel -->
-    <q-btn color="primary" label="Scan" @click="scanMatériel" />
-    <!-- Retourne l'ID du matériel scanné -->
-    <p>ID du matériel: {{ idMat }}</p>
+    <q-btn color="primary" class="q-mx-md" label="Scan" @click="scanMatériel" />
   </div>
+    <!-- Retourne l'ID du matériel scanné -->
+    <q-list>
+      <q-item v-for="mat in idMat">
+        <q-item-section>
+          {{mat}}
+        </q-item-section>
+      </q-item>
+    </q-list>
 
-  <!-- Boutons radios pour choisir si c'est un emprunt ou un retour -->
-  <div class="q-pa-md">
+    <!-- Boutons radios pour choisir si c'est un emprunt ou un retour -->
+  <div class="flex flex-center q-pa-md">
     <q-option-group
       :options="options"
       type="radio"
@@ -35,15 +42,26 @@
       :model-value="empRet"
     />
     <!-- Afficher avec une variable quel choix est sélectionné -->
-    <label>{{ empRet }}</label>
+    <p hidden>{{ empRet }}</p>
   </div>
 
+  <div class="flex flex-center q-pa-md">
   <!-- Bouton pour envoyer la requête POST -->
   <q-btn color="primary" @click="postEmprunt">
-    Envoyer
+    {{ empRet }}
   </q-btn>
-  <!-- Afficher le résultat de la requête -->
-  <p>Résultat: {{ resEmp }}</p>
+  </div>
+    <!-- Afficher le résultat de la requête -->
+  <p hidden>Résultat: {{ resEmp }}</p>
+
+      </span>
+
+  <!-- Afficher si la fonction NFC du téléphone n'est pas activée -->
+  <span v-if="nfc_disabled">
+        <h2>Activez le paramètre NFC</h2>
+    <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
+      <q-btn color="primary" v-on:click="showSettings">Activer</q-btn>
+      </span>
 </template>
 
 <script>
@@ -54,10 +72,10 @@ import { api } from 'boot/axios'
 export default defineComponent({
   setup () {
     return {
-      empRet: ref('emprunt'),
+      empRet: ref('emprunter'),
       options: [
-        { label: 'Emprunt', value: 'emprunt', checkedIcon: 'task_alt' },
-        { label: 'Retour', value: 'retour', checkedIcon: 'task_alt' }
+        { label: 'Emprunt', value: 'emprunter', checkedIcon: 'task_alt' },
+        { label: 'Retour', value: 'retourner', checkedIcon: 'task_alt' }
       ]
     }
   },
@@ -66,17 +84,92 @@ export default defineComponent({
   // Déclaration des données
   data () {
     return {
+      compatible: true,
+      nfc_disabled: false,
+      tagId: '',
       res: '',
       retour: false,
       imageSrc: '',
       resEmp: null,
       idEtu: '', // resultat du QR code scanné
-      idMat: '', // resultat du QR code scanné
+      idMat: [], // resultat du QR code scanné
       description: ''
     }
   },
+  mounted () {
+    // Lorsque la vue est montée, enregistre l'événement du scan
+    this.registerTagEvent()
+  },
+  beforeUnmount () {
+    // Lorsque la vue est détruite (départ de l'utilisateur),
+    // annule l'enregistrement de l'événement de balise de numérisation pour éviter de numériser la balise dans une autre vue
+    this.unregisterTagEvent()
+  },
   // Déclaration des méthodes
   methods: {
+
+    registerTagEvent () {
+      // Annulation de l'écoute de l'événement "resume" précédent.
+      document.removeEventListener('resume', this.registerTagEvent, false)
+      if (typeof (nfc) !== 'undefined') {
+        // NFC est disponible, en attente de scan
+        // eslint-disable-next-line no-undef
+        nfc.addTagDiscoveredListener(this.displayTagId, this.success, this.error)
+      } else {
+        // Le plugin n'est pas présent ou n'a pas pu être initialisé.
+        this.error()
+      }
+    },
+    unregisterTagEvent () {
+      // Tester si le plugin NFC est défini
+      if (typeof (nfc) !== 'undefined') {
+        // eslint-disable-next-line no-undef
+        nfc.removeTagDiscoveredListener(this.displayTagId)
+      }
+    },
+    displayTagId (nfcEvent) {
+      // Décoder les données des tags du plugin NFC
+      const tag = nfcEvent.tag
+      this.tagId = ''
+      // eslint-disable-next-line no-undef
+      this.tagId = nfc.bytesToHexString(tag.id)
+      this.idEtu = this.tagId
+      // Ajouter la nouvelle balise à la liste sauvegardée
+      this.items.push(this.tagId)
+      // Afficher le tag Id dans la console
+      console.log(this.tagId)
+    },
+    error (e) {
+      // Gérer l'état
+      if (e === 'NFC_DISABLED') {
+        this.compatible = false
+        this.nfc_disabled = true
+      } else {
+        this.nfc_disabled = false
+        this.compatible = false
+      }
+    },
+    success () {
+      this.compatible = true
+      this.nfc_disabled = false
+      console.log('NfC initialisé')
+    },
+    showSettings () {
+      // Ouvre les paramètres du téléphone pour activer les paramètres NfC
+      nfc.showSettings()
+      // Pour rafraîchir l'état du NFC, nous ajoutons un écouteur à l'événement "resume".
+      // L'événement "resume" est déclenché par Cordova lorsque l'application est relancée.
+      document.addEventListener('resume', this.registerTagEvent, false)
+    },
+    // Méthode pour obtenir le nom de l'étudiant depuis son ID
+    getEtudiantFromAPI () {
+      const id = this.idEtu
+      api.get('/ELT/rest/idreq.php?id=' + id).then(nomEtu => {
+        // Afficher le résltat de la rquête avec l'ID
+        // Afficher uniquement le nom et prénom
+        this.nomEtu = nomEtu.data.split(',')[1]
+      })
+    },
     // Méthode pour scanner un QR code de l'étudiant
     scanEtudiant () {
       cordova.plugins.barcodeScanner.scan(
@@ -105,7 +198,7 @@ export default defineComponent({
     scanMatériel () {
       cordova.plugins.barcodeScanner.scan(
         result => {
-          this.idMat = result.text
+          this.idMat.push(result.text)
         },
         error => {
           alert('Scan raté: ' + error)
@@ -136,7 +229,7 @@ export default defineComponent({
       formData.append('idUser', this.idEtu)
       formData.append('idDevice', this.idMat)
       // Ajout d'un paramètre uniquement si le bouton "Retour" est choisi
-      if (this.empRet === 'retour') { formData.append('ret', '') }
+      if (this.empRet === 'retourner') { formData.append('ret', '') }
       // Création de la requête complète
       api.post('/ELT/rest/borrow.php',
         // Paramètres de la requête
@@ -151,27 +244,7 @@ export default defineComponent({
       }).catch((err) => {
         console.error(err)
       })
-    },
-    // Méthode pour obtenir le nom de l'étudiant depuis son ID
-    getEtudiantFromAPI () {
-      const id = this.title
-      api.get('/ELT/rest/idreq.php?id=' + id).then(res => {
-        // Afficher le résltat de la rquête avec l'ID
-        // Afficher uniquement le nom et prénom
-        this.res = res.data.split(',')[1]
-      })
     }
   }
 })
 </script>
-
-<style>
-.etudiant{
-  position: absolute;
-  left: 7.2%;
-  right: 43.73%;
-  top: 19.33%;
-  bottom: 71.8%;
-}
-
-</style>
