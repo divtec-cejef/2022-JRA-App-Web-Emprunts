@@ -5,24 +5,23 @@
  -->
 
 <template>
-
-  <span v-if="compatible">
+  <div v-if="compatible">
     <div class="flex flex-center q-my-md q-mt-xl">
     <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant"/>
     </div>
       <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant -->
-    <q-btn color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant" />
+      <q-btn color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant" />
       <!-- Retourne l'ID de l'étudiant scanné -->
-    <p hidden>ID de l'étudiant: {{ idEtu }}</p>
-  </div>
-  <div class="flex flex-center q-my-md">
-    <div style="max-width: 200px" class="q-mx-md">
-      <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"/>
+      <p hidden>ID de l'étudiant: {{ idEtu }}</p>
     </div>
-    <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel -->
-    <q-btn color="primary" class="q-mx-md" label="Scan" @click="scanMatériel" />
-  </div>
+    <div class="flex flex-center q-my-md">
+      <div style="max-width: 200px" class="q-mx-md">
+        <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"/>
+      </div>
+      <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel -->
+      <q-btn color="primary" class="q-mx-md" label="Scan" @click="scanMateriel" />
+    </div>
     <!-- Retourne l'ID du matériel scanné -->
     <q-list>
       <q-item v-for="mat in idMat" :key="mat">
@@ -33,35 +32,36 @@
     </q-list>
 
     <!-- Boutons radios pour choisir si c'est un emprunt ou un retour -->
-  <div class="flex flex-center q-pa-md">
-    <q-option-group
-      :options="options"
-      type="radio"
-      v-model="empRet"
-      color="primary"
-      :model-value="empRet"
-    />
-    <!-- Afficher avec une variable quel choix est sélectionné -->
-    <p hidden>{{ empRet }}</p>
-  </div>
+    <div class="flex flex-center q-pa-md">
+      <q-option-group
+        :options="options"
+        type="radio"
+        v-model="empRet"
+        color="primary"
+        :model-value="empRet"
+      />
+      <!-- Afficher avec une variable quel choix est sélectionné -->
+      <p hidden>{{ empRet }}</p>
+    </div>
 
-  <div class="flex flex-center q-pa-md">
-  <!-- Bouton pour envoyer la requête POST -->
-  <q-btn color="primary" @click="postEmprunt">
-    {{ empRet }}
-  </q-btn>
-  </div>
+    <div class="flex flex-center q-pa-md">
+    <!-- Bouton pour envoyer la requête POST -->
+      <q-btn color="primary" @click="postEmprunt">
+        {{ empRet }}
+      </q-btn>
+    </div>
     <!-- Afficher le résultat de la requête -->
-  <p >Résultat: {{ resEmp }}</p>
-
-      </span>
+    <p >Résultat: {{ resEmp }}</p>
+  </div>
 
   <!-- Afficher si la fonction NFC du téléphone n'est pas activée -->
-  <span v-if="nfc_disabled">
-        <h2>Activez le paramètre NFC</h2>
-    <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
+  <div v-if="nfc_disabled">
+        <h5 class="flex flex-center">Activez le paramètre NFC</h5>
+    <div class="flex flex-center q-pa-md">
+          <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
       <q-btn color="primary" v-on:click="showSettings">Activer</q-btn>
-      </span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -196,7 +196,7 @@ export default defineComponent({
       )
     },
     // Méthode pour scanner un QR code de l'étudiant
-    scanMatériel () {
+    scanMateriel () {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idMat.push(result.text)
@@ -243,6 +243,7 @@ export default defineComponent({
       ).then((resEmp) => {
         this.resEmp = resEmp
       }).catch((err) => {
+        this.resEmp = err
         console.error(err)
       })
     }

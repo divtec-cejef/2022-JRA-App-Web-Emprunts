@@ -9,7 +9,7 @@ const routes = [
         path: '',
         component: () => import('pages/Gestion.vue')
       },
-      { // enseignants et apprentis
+      { // Tout le monde du moment qu'il est connecté avec son login DIVTEC
         path: '/gestion',
         component: () => import('pages/Gestion.vue'),
         meta: { roles: [ROLES.ENSEIGNANT, ROLES.APPRENTI, ROLES.SECRETAIRE, ROLES.COORDINATEUR] }
