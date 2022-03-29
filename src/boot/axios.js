@@ -21,8 +21,8 @@ const apiGeFoPro = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json'
-  }})
-
+  }
+})
 /**
  * Test si l'expiration du token et plus petite que la limite fixée
  * par rapport à l'heure actuelle.

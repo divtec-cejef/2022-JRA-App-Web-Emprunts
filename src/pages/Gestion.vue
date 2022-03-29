@@ -25,7 +25,7 @@
   </div>
     <!-- Retourne l'ID du matériel scanné -->
     <q-list>
-      <q-item v-for="mat in idMat">
+      <q-item v-for="mat in idMat" :key="mat">
         <q-item-section>
           {{mat}}
         </q-item-section>
@@ -52,7 +52,7 @@
   </q-btn>
   </div>
     <!-- Afficher le résultat de la requête -->
-  <p hidden>Résultat: {{ resEmp }}</p>
+  <p >Résultat: {{ resEmp }}</p>
 
       </span>
 
