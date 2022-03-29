@@ -5,7 +5,15 @@
  -->
 
 <template>
-  <div v-if="compatible">
+  <!-- Afficher si la fonction NFC du téléphone n'est pas activée -->
+  <div v-if="nfc_disabled">
+    <h5 class="flex flex-center">Activez le paramètre NFC</h5>
+    <div class="flex flex-center q-pa-md">
+      <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
+      <q-btn color="primary" v-on:click="showSettings">Activer</q-btn>
+    </div>
+  </div>
+
     <div class="flex flex-center q-my-md q-mt-xl">
     <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant"/>
@@ -40,9 +48,9 @@
         color="primary"
         :model-value="empRet"
       />
+    </div>
       <!-- Afficher avec une variable quel choix est sélectionné -->
       <p hidden>{{ empRet }}</p>
-    </div>
 
     <div class="flex flex-center q-pa-md">
     <!-- Bouton pour envoyer la requête POST -->
@@ -52,16 +60,6 @@
     </div>
     <!-- Afficher le résultat de la requête -->
     <p >Résultat: {{ resEmp }}</p>
-  </div>
-
-  <!-- Afficher si la fonction NFC du téléphone n'est pas activée -->
-  <div v-if="nfc_disabled">
-        <h5 class="flex flex-center">Activez le paramètre NFC</h5>
-    <div class="flex flex-center q-pa-md">
-          <!-- Affiche un bouton pour activer la fonction NFC du téléphone -->
-      <q-btn color="primary" v-on:click="showSettings">Activer</q-btn>
-    </div>
-  </div>
 </template>
 
 <script>
