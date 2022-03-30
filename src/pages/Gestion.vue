@@ -5,6 +5,7 @@
  -->
 
 <template>
+
   <!-- Afficher si la fonction NFC du téléphone n'est pas activée -->
   <div v-if="nfc_disabled">
     <h5 class="flex flex-center">Activez le paramètre NFC</h5>
@@ -18,21 +19,37 @@
     <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant"/>
     </div>
-      <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant -->
-      <q-btn color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant" />
+
+      <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant
+      uniquement visible sur mobile -->
+      <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant" />
+
       <!-- Retourne l'ID de l'étudiant scanné -->
       <p hidden>ID de l'étudiant: {{ idEtu }}</p>
     </div>
+
     <div class="flex flex-center q-my-md">
+
+      <!-- if pour détecter sur quelle plateforme on est et
+      changer l'afficher en focntion de la plateforme -->
       <div style="max-width: 200px" class="q-mx-md">
         <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"/>
       </div>
-      <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel -->
-      <q-btn color="primary" class="q-mx-md" label="Scan" @click="scanMateriel" />
+
+      <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel
+      uniquement visible sur mobile -->
+      <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanMateriel"/>
     </div>
+
+  <div class="flex flex-center q-my-md">
+    <label class="q-pa-md">Ajoutez le matériel</label>
+    <q-btn v-if="this.idMat!==''" icon="check" color="primary" @click="this.listMat.push(idMat), this.idMat='' "/>
+    <q-btn disable v-else icon="clear" color="primary"/>
+  </div>
+
     <!-- Retourne l'ID du matériel scanné -->
-    <q-list>
-      <q-item v-for="mat in idMat" :key="mat">
+    <q-list class="text-center">
+      <q-item v-for="mat in listMat" :key="mat">
         <q-item-section>
           {{mat}}
         </q-item-section>
@@ -49,6 +66,7 @@
         :model-value="empRet"
       />
     </div>
+
       <!-- Afficher avec une variable quel choix est sélectionné -->
       <p hidden>{{ empRet }}</p>
 
@@ -90,7 +108,8 @@ export default defineComponent({
       imageSrc: '',
       resEmp: null,
       idEtu: '', // resultat du QR code scanné
-      idMat: [], // resultat du QR code scanné
+      idMat: '', // resultat du QR code scanné
+      listMat: [],
       description: ''
     }
   },
@@ -164,7 +183,7 @@ export default defineComponent({
     getEtudiantFromAPI () {
       const id = this.idEtu
       apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(nomEtu => {
-        // Afficher le résltat de la rquête avec l'ID
+        // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
         this.nomEtu = nomEtu.data.split(',')[1]
       })
@@ -197,7 +216,7 @@ export default defineComponent({
     scanMateriel () {
       cordova.plugins.barcodeScanner.scan(
         result => {
-          this.idMat.push(result.text)
+          this.idMat = result.text
         },
         error => {
           alert('Scan raté: ' + error)
