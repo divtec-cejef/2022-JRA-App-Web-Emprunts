@@ -96,7 +96,7 @@
           <q-item v-else>
             <q-item-section>
               <!-- Condition qui change le message en fonction du code erreur -->
-              <p v-if="resEmp===403">Erreur {{ resEmp }} : appareil déjà prêté ou retour d’un appareil non prêté</p>
+              <p v-if="resEmp===403">Erreur {{ resEmp }} : {{nameMat}} appareil déjà prêté ou retour d’un appareil non prêté</p>
               <p v-else-if="resEmp===404">Erreur {{ resEmp }} : identifiant(s) non trouvé(s)</p>
               <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
             </q-item-section>
@@ -142,6 +142,7 @@ export default defineComponent({
       resEmp: null,
       idEtu: '', // resultat du QR code scanné
       idMat: '', // resultat du QR code scanné
+      nameMat: '',
       listIdMat: [],
       listNameMat: [],
       error: false,
@@ -227,12 +228,12 @@ export default defineComponent({
       document.addEventListener('resume', this.registerTagEvent, false)
     },
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
-    getEtudiantFromAPI() {
-      const id = this.idEtu
-      apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(nomEtu => {
+    getMaterielFromAPI(id) {
+
+      apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(nomMat => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
-        this.nomEtu = nomEtu.data.split(',')[1]
+        this.nameMat = nomMat.data.split(',')[1]
       })
     },
     // Méthode pour scanner un QR code de l'étudiant
@@ -311,6 +312,7 @@ export default defineComponent({
         ).then((resEmp) => {
           console.log(resEmp)
           // Nom du matériel
+          this.nameMat = resEmp.data.split(',')[2]
           this.resEmp = resEmp.data.split(',')[2]
 
           // Ajout le nom de l'article à une liste pour afficher tous les articles
@@ -321,6 +323,7 @@ export default defineComponent({
 
         }).catch((err) => {
           this.error = true
+          this.getMaterielFromAPI(idMat)
           this.resEmp = err.response.status
           this.alert = true
         })
