@@ -15,67 +15,70 @@
     </div>
   </div>
 
-    <div class="flex flex-center q-my-md q-mt-xl">
+  <div class="flex flex-center q-my-md q-mt-xl">
     <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant"/>
     </div>
 
-      <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant
-      uniquement visible sur mobile -->
-      <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant" />
+    <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant
+    uniquement visible sur mobile -->
+    <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant"/>
 
-      <!-- Retourne l'ID de l'étudiant scanné -->
-      <p hidden>ID de l'étudiant: {{ idEtu }}</p>
-    </div>
-
-    <div class="flex flex-center q-my-md">
-
-      <!-- if pour détecter sur quelle plateforme on est et
-      changer l'afficher en focntion de la plateforme -->
-      <div style="max-width: 200px" class="q-mx-md">
-        <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"/>
-      </div>
-
-      <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel
-      uniquement visible sur mobile -->
-      <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanMateriel"/>
-    </div>
-
-  <div class="flex flex-center q-my-md">
-    <label class="q-pa-md">Ajoutez le matériel</label>
-    <q-btn v-if="this.idMat!==''" icon="check" color="primary" @click="this.listIdMat.push(idMat), this.idMat='' "/>
-    <q-btn disable v-else icon="clear" color="primary"/>
+    <!-- Retourne l'ID de l'étudiant scanné -->
+    <p hidden>ID de l'étudiant: {{ idEtu }}</p>
   </div>
 
-    <!-- Retourne l'ID du matériel scanné -->
-    <q-list class="text-center">
-      <q-item v-for="mat in listIdMat" :key="mat">
-        <q-item-section>
-          {{mat}}
-        </q-item-section>
-      </q-item>
-    </q-list>
+  <div class="flex flex-center q-my-md">
 
-    <!-- Boutons radios pour choisir si c'est un emprunt ou un retour -->
-    <div class="flex flex-center q-pa-md">
-      <q-option-group
-        :options="options"
-        type="radio"
-        v-model="empRet"
-        color="primary"
-        :model-value="empRet"
-      />
+    <div style="max-width: 200px" class="q-mx-md">
+      <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"/>
     </div>
 
-      <!-- Afficher avec une variable quel choix est sélectionné -->
-      <p hidden>{{ empRet }}</p>
+    <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel
+     uniquement visible sur mobile -->
+    <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanMateriel"/>
+  </div>
 
-    <div class="flex flex-center q-pa-md">
-    <!-- Bouton pour envoyer la requête POST @click="alert = true"-->
-      <q-btn color="primary" @click="postEmprunt">
-        {{ empRet }}
-      </q-btn>
-    </div>
+  <div v-if="this.idMat!==''" class="flex flex-center q-my-md">
+    <label class="q-pa-md">Ajoutez le matériel</label>
+    <q-btn icon="check" color="primary" @click="initIdMat"/>
+  </div>
+
+  <div v-else class="flex flex-center q-my-md">
+    <label class="q-pa-md">Supprimer la liste</label>
+    <q-btn icon="clear" color="primary" @click="this.listIdMat=[]"/>
+  </div>
+
+
+  <!-- Retourne l'ID du matériel scanné -->
+  <q-list class="text-center">
+    <q-item v-for="mat in listIdMat" :key="mat">
+      <q-item-section>
+        {{ mat }}
+      </q-item-section>
+    </q-item>
+  </q-list>
+
+  <!-- Boutons radios pour choisir si c'est un emprunt ou un retour -->
+  <div class="flex flex-center q-pa-md">
+    <q-option-group
+      :options="options"
+      type="radio"
+      v-model="empRet"
+      color="primary"
+      :model-value="empRet"
+    />
+  </div>
+
+  <!-- Afficher avec une variable quel choix est sélectionné -->
+  <p hidden>{{ empRet }}</p>
+
+  <div class="flex flex-center q-pa-md">
+    <!-- Bouton pour envoyer la requête POST @click="alert = true" -->
+    <q-btn color="primary" @click="postEmprunt">
+      {{ empRet }}
+    </q-btn>
+  </div>
 
   <q-dialog v-model="alert">
     <q-card>
@@ -87,49 +90,48 @@
         <q-list class="text-center">
           <q-item v-if="!error" v-for="name in listNameMat" :key="name">
             <q-item-section>
-              {{name}}
+              {{ name }}
             </q-item-section>
           </q-item>
-            <q-item v-else>
-              <q-item-section>
-                <p v-if="resEmp===403">Erreur {{resEmp}} : appareil déjà prêté ou retour d’un appareil non prêté</p>
-                <p v-else-if="resEmp===404">Erreur {{resEmp}} : identifiant(s) non trouvé(s)</p>
-                <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
-              </q-item-section>
+          <q-item v-else>
+            <q-item-section>
+              <!-- Condition qui change le message en fonction du code erreur -->
+              <p v-if="resEmp===403">Erreur {{ resEmp }} : appareil déjà prêté ou retour d’un appareil non prêté</p>
+              <p v-else-if="resEmp===404">Erreur {{ resEmp }} : identifiant(s) non trouvé(s)</p>
+              <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
+            </q-item-section>
           </q-item>
         </q-list>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="OK" color="primary" v-close-popup />
+        <q-btn flat label="OK" color="primary" v-close-popup @click="resetLists"/>
       </q-card-actions>
     </q-card>
   </q-dialog>
 
-    <!-- Afficher le résultat de la requête -->
-    <p >Résultat: {{ resEmp }}</p>
 </template>
 
 <script>
-// Importation de l'élément "ref"
-import { defineComponent, ref } from 'vue'
-import { apiGeFoPro } from 'boot/axios'
+// Importation de les éléments
+import {defineComponent, ref} from 'vue'
+import {apiGeFoPro} from 'boot/axios'
 
 export default defineComponent({
-  setup () {
+  setup() {
     return {
       alert: ref(false),
       empRet: ref('emprunter'),
       options: [
-        { label: 'Emprunt', value: 'emprunter', checkedIcon: 'task_alt' },
-        { label: 'Retour', value: 'retourner', checkedIcon: 'task_alt' }
+        {label: 'Emprunt', value: 'emprunter', checkedIcon: 'task_alt'},
+        {label: 'Retour', value: 'retourner', checkedIcon: 'task_alt'}
       ]
     }
   },
   // Nom de la page
   name: 'Gestion',
   // Déclaration des données
-  data () {
+  data() {
     return {
       compatible: true,
       nfc_disabled: false,
@@ -146,11 +148,11 @@ export default defineComponent({
       description: ''
     }
   },
-  mounted () {
+  mounted() {
     // Lorsque la vue est montée, enregistre l'événement du scan
     this.registerTagEvent()
   },
-  beforeUnmount () {
+  beforeUnmount() {
     // Lorsque la vue est détruite (départ de l'utilisateur),
     // annule l'enregistrement de l'événement de balise de numérisation pour éviter de numériser la balise dans une autre vue
     this.unregisterTagEvent()
@@ -158,7 +160,19 @@ export default defineComponent({
   // Déclaration des méthodes
   methods: {
 
-    registerTagEvent () {
+    // Ajouter l'id du matétiel à la liste et vider le champs
+    initIdMat(){
+      this.listIdMat.push(this.idMat)
+      this.idMat=''
+    },
+
+    // Vider les 2 listes
+    resetLists(){
+      this.listIdMat=[]
+      this.listNameMat=[]
+    },
+
+    registerTagEvent() {
       // Annulation de l'écoute de l'événement "resume" précédent.
       document.removeEventListener('resume', this.registerTagEvent, false)
       if (typeof (nfc) !== 'undefined') {
@@ -170,14 +184,14 @@ export default defineComponent({
         this.error()
       }
     },
-    unregisterTagEvent () {
+    unregisterTagEvent() {
       // Tester si le plugin NFC est défini
       if (typeof (nfc) !== 'undefined') {
         // eslint-disable-next-line no-undef
         nfc.removeTagDiscoveredListener(this.displayTagId)
       }
     },
-    displayTagId (nfcEvent) {
+    displayTagId(nfcEvent) {
       // Décoder les données des tags du plugin NFC
       const tag = nfcEvent.tag
       this.tagId = ''
@@ -189,7 +203,7 @@ export default defineComponent({
       // Afficher le tag Id dans la console
       console.log(this.tagId)
     },
-    error (e) {
+    error(e) {
       // Gérer l'état
       if (e === 'NFC_DISABLED') {
         this.compatible = false
@@ -199,12 +213,12 @@ export default defineComponent({
         this.compatible = false
       }
     },
-    success () {
+    success() {
       this.compatible = true
       this.nfc_disabled = false
       console.log('NfC initialisé')
     },
-    showSettings () {
+    showSettings() {
       // Ouvre les paramètres du téléphone pour activer les paramètres NfC
       // eslint-disable-next-line no-undef
       nfc.showSettings()
@@ -213,7 +227,7 @@ export default defineComponent({
       document.addEventListener('resume', this.registerTagEvent, false)
     },
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
-    getEtudiantFromAPI () {
+    getEtudiantFromAPI() {
       const id = this.idEtu
       apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(nomEtu => {
         // Afficher le résultat de la requête avec l'ID
@@ -222,7 +236,7 @@ export default defineComponent({
       })
     },
     // Méthode pour scanner un QR code de l'étudiant
-    scanEtudiant () {
+    scanEtudiant() {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idEtu = result.text
@@ -246,7 +260,7 @@ export default defineComponent({
       )
     },
     // Méthode pour scanner un QR code de l'étudiant
-    scanMateriel () {
+    scanMateriel() {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idMat = result.text
@@ -269,7 +283,7 @@ export default defineComponent({
         }
       )
     },
-    postEmprunt () {
+    postEmprunt() {
       // Réinitialser la variable avec aucune valeur dedans
       this.resEmp = null
       // idUser: "73be4c03"
@@ -278,33 +292,38 @@ export default defineComponent({
       const formData = new FormData()
       // Ajout des données dans le formulaire
       formData.append('idUser', this.idEtu)
-      formData.append('idDevice', this.idMat)
-      // Ajout d'un paramètre uniquement si le bouton "Retour" est choisi
-      if (this.empRet === 'retourner') { formData.append('ret', '') }
-      // Création de la requête complète
-      apiGeFoPro.post('/ELT/rest/borrow.php',
-        // Paramètres de la requête
-        formData,
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+
+      this.listIdMat.forEach(idMat => {
+        formData.append('idDevice', idMat)
+        // Ajout d'un paramètre uniquement si le bouton "Retour" est choisi
+        if (this.empRet === 'retourner') {
+          formData.append('ret', '')
         }
-      ).then((resEmp) => {
-        console.log(resEmp)
-        // Nom du matériel
-        this.resEmp = resEmp.data.split(',')[2]
+        // Création de la requête complète
+        apiGeFoPro.post('/ELT/rest/borrow.php',
+          // Paramètres de la requête
+          formData,
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }
+        ).then((resEmp) => {
+          console.log(resEmp)
+          // Nom du matériel
+          this.resEmp = resEmp.data.split(',')[2]
 
-        // Ajout le nom de l'article à une liste pour afficher tous les articles
-        this.listNameMat.push(this.resEmp)
+          // Ajout le nom de l'article à une liste pour afficher tous les articles
+          this.listNameMat.push(this.resEmp)
 
-        this.error = false
-        this.alert = true
+          this.error = false
+          this.alert = true
 
-      }).catch((err) => {
-        this.error = true
-        this.resEmp = err.response.status
-        this.alert = true
+        }).catch((err) => {
+          this.error = true
+          this.resEmp = err.response.status
+          this.alert = true
+        })
       })
     }
   }
