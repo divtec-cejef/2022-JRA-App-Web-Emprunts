@@ -49,7 +49,6 @@
     <q-btn icon="clear" color="primary" @click="this.listIdMat=[]"/>
   </div>
 
-
   <!-- Retourne l'ID du matériel scanné -->
   <q-list class="text-center">
     <q-item v-for="mat in listIdMat" :key="mat">
@@ -88,13 +87,13 @@
 
       <q-card-section class="q-pt-none">
         <q-list class="text-center">
-          <q-item v-if="!error" v-for="name in listNameMat" :key="name">
-            <q-item-section>
-              {{ name }}
+          <q-item>
+            <q-item-section v-if="!errorId">
+              <div v-for="name in listNameMat" :key="name">
+                {{ name }}
+              </div>
             </q-item-section>
-          </q-item>
-          <q-item v-else>
-            <q-item-section>
+            <q-item-section v-else>
               <!-- Condition qui change le message en fonction du code erreur -->
               <p v-if="resEmp===403">Erreur {{ resEmp }} : {{nameMat}} appareil déjà prêté ou retour d’un appareil non prêté</p>
               <p v-else-if="resEmp===404">Erreur {{ resEmp }} : identifiant(s) non trouvé(s)</p>
@@ -114,24 +113,24 @@
 
 <script>
 // Importation de les éléments
-import {defineComponent, ref} from 'vue'
-import {apiGeFoPro} from 'boot/axios'
+import { defineComponent, ref } from 'vue'
+import { apiGeFoPro } from 'boot/axios'
 
 export default defineComponent({
-  setup() {
+  setup () {
     return {
       alert: ref(false),
       empRet: ref('emprunter'),
       options: [
-        {label: 'Emprunt', value: 'emprunter', checkedIcon: 'task_alt'},
-        {label: 'Retour', value: 'retourner', checkedIcon: 'task_alt'}
+        { label: 'Emprunt', value: 'emprunter', checkedIcon: 'task_alt' },
+        { label: 'Retour', value: 'retourner', checkedIcon: 'task_alt' }
       ]
     }
   },
   // Nom de la page
   name: 'Gestion',
   // Déclaration des données
-  data() {
+  data () {
     return {
       compatible: true,
       nfc_disabled: false,
@@ -145,15 +144,15 @@ export default defineComponent({
       nameMat: '',
       listIdMat: [],
       listNameMat: [],
-      error: false,
+      errorId: false,
       description: ''
     }
   },
-  mounted() {
+  mounted () {
     // Lorsque la vue est montée, enregistre l'événement du scan
     this.registerTagEvent()
   },
-  beforeUnmount() {
+  beforeUnmount () {
     // Lorsque la vue est détruite (départ de l'utilisateur),
     // annule l'enregistrement de l'événement de balise de numérisation pour éviter de numériser la balise dans une autre vue
     this.unregisterTagEvent()
@@ -162,18 +161,18 @@ export default defineComponent({
   methods: {
 
     // Ajouter l'id du matétiel à la liste et vider le champs
-    initIdMat(){
+    initIdMat () {
       this.listIdMat.push(this.idMat)
-      this.idMat=''
+      this.idMat = ''
     },
 
     // Vider les 2 listes
-    resetLists(){
-      this.listIdMat=[]
-      this.listNameMat=[]
+    resetLists () {
+      this.listIdMat = []
+      this.listNameMat = []
     },
 
-    registerTagEvent() {
+    registerTagEvent () {
       // Annulation de l'écoute de l'événement "resume" précédent.
       document.removeEventListener('resume', this.registerTagEvent, false)
       if (typeof (nfc) !== 'undefined') {
@@ -185,14 +184,14 @@ export default defineComponent({
         this.error()
       }
     },
-    unregisterTagEvent() {
+    unregisterTagEvent () {
       // Tester si le plugin NFC est défini
       if (typeof (nfc) !== 'undefined') {
         // eslint-disable-next-line no-undef
         nfc.removeTagDiscoveredListener(this.displayTagId)
       }
     },
-    displayTagId(nfcEvent) {
+    displayTagId (nfcEvent) {
       // Décoder les données des tags du plugin NFC
       const tag = nfcEvent.tag
       this.tagId = ''
@@ -204,7 +203,7 @@ export default defineComponent({
       // Afficher le tag Id dans la console
       console.log(this.tagId)
     },
-    error(e) {
+    error (e) {
       // Gérer l'état
       if (e === 'NFC_DISABLED') {
         this.compatible = false
@@ -214,12 +213,12 @@ export default defineComponent({
         this.compatible = false
       }
     },
-    success() {
+    success () {
       this.compatible = true
       this.nfc_disabled = false
       console.log('NfC initialisé')
     },
-    showSettings() {
+    showSettings () {
       // Ouvre les paramètres du téléphone pour activer les paramètres NfC
       // eslint-disable-next-line no-undef
       nfc.showSettings()
@@ -228,8 +227,7 @@ export default defineComponent({
       document.addEventListener('resume', this.registerTagEvent, false)
     },
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
-    getMaterielFromAPI(id) {
-
+    getMaterielFromAPI (id) {
       apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(nomMat => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
@@ -237,7 +235,7 @@ export default defineComponent({
       })
     },
     // Méthode pour scanner un QR code de l'étudiant
-    scanEtudiant() {
+    scanEtudiant () {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idEtu = result.text
@@ -261,7 +259,7 @@ export default defineComponent({
       )
     },
     // Méthode pour scanner un QR code de l'étudiant
-    scanMateriel() {
+    scanMateriel () {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idMat = result.text
@@ -284,7 +282,7 @@ export default defineComponent({
         }
       )
     },
-    postEmprunt() {
+    postEmprunt () {
       // Réinitialser la variable avec aucune valeur dedans
       this.resEmp = null
       // idUser: "73be4c03"
@@ -318,11 +316,10 @@ export default defineComponent({
           // Ajout le nom de l'article à une liste pour afficher tous les articles
           this.listNameMat.push(this.resEmp)
 
-          this.error = false
+          this.errorId = false
           this.alert = true
-
         }).catch((err) => {
-          this.error = true
+          this.errorId = true
           this.getMaterielFromAPI(idMat)
           this.resEmp = err.response.status
           this.alert = true

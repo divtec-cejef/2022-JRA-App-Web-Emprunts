@@ -17,7 +17,7 @@ const api = axios.create({
 })
 
 const apiGeFoPro = axios.create({
-  baseURL: 'https://demo.gefopro.ch',
+  baseURL: 'https://ateliers.divtec.ch',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json'
