@@ -43,13 +43,13 @@
 
   <div class="flex flex-center q-my-md">
     <label class="q-pa-md">Ajoutez le matériel</label>
-    <q-btn v-if="this.idMat!==''" icon="check" color="primary" @click="this.listMat.push(idMat), this.idMat='' "/>
+    <q-btn v-if="this.idMat!==''" icon="check" color="primary" @click="this.listIdMat.push(idMat), this.idMat='' "/>
     <q-btn disable v-else icon="clear" color="primary"/>
   </div>
 
     <!-- Retourne l'ID du matériel scanné -->
     <q-list class="text-center">
-      <q-item v-for="mat in listMat" :key="mat">
+      <q-item v-for="mat in listIdMat" :key="mat">
         <q-item-section>
           {{mat}}
         </q-item-section>
@@ -71,11 +71,41 @@
       <p hidden>{{ empRet }}</p>
 
     <div class="flex flex-center q-pa-md">
-    <!-- Bouton pour envoyer la requête POST -->
+    <!-- Bouton pour envoyer la requête POST @click="alert = true"-->
       <q-btn color="primary" @click="postEmprunt">
         {{ empRet }}
       </q-btn>
     </div>
+
+  <q-dialog v-model="alert">
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">Information</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        <q-list class="text-center">
+          <q-item v-if="!error" v-for="name in listNameMat" :key="name">
+            <q-item-section>
+              {{name}}
+            </q-item-section>
+          </q-item>
+            <q-item v-else>
+              <q-item-section>
+                <p v-if="resEmp===403">Erreur {{resEmp}} : appareil déjà prêté ou retour d’un appareil non prêté</p>
+                <p v-else-if="resEmp===404">Erreur {{resEmp}} : identifiant(s) non trouvé(s)</p>
+                <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
+              </q-item-section>
+          </q-item>
+        </q-list>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat label="OK" color="primary" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
     <!-- Afficher le résultat de la requête -->
     <p >Résultat: {{ resEmp }}</p>
 </template>
@@ -88,6 +118,7 @@ import { apiGeFoPro } from 'boot/axios'
 export default defineComponent({
   setup () {
     return {
+      alert: ref(false),
       empRet: ref('emprunter'),
       options: [
         { label: 'Emprunt', value: 'emprunter', checkedIcon: 'task_alt' },
@@ -109,7 +140,9 @@ export default defineComponent({
       resEmp: null,
       idEtu: '', // resultat du QR code scanné
       idMat: '', // resultat du QR code scanné
-      listMat: [],
+      listIdMat: [],
+      listNameMat: [],
+      error: false,
       description: ''
     }
   },
@@ -258,10 +291,20 @@ export default defineComponent({
           }
         }
       ).then((resEmp) => {
-        this.resEmp = resEmp
+        console.log(resEmp)
+        // Nom du matériel
+        this.resEmp = resEmp.data.split(',')[2]
+
+        // Ajout le nom de l'article à une liste pour afficher tous les articles
+        this.listNameMat.push(this.resEmp)
+
+        this.error = false
+        this.alert = true
+
       }).catch((err) => {
-        this.resEmp = err
-        console.error(err)
+        this.error = true
+        this.resEmp = err.response.status
+        this.alert = true
       })
     }
   }
