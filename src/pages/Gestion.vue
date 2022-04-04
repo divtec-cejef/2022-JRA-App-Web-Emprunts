@@ -17,15 +17,15 @@
 
   <div class="flex flex-center q-my-md q-mt-xl">
     <div style="max-width: 200px" class="q-mx-md">
-      <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant"/>
+      <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant" @update:model-value="getMaterielFromAPI(idEtu)"/>
     </div>
 
     <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant
     uniquement visible sur mobile -->
     <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant"/>
 
-    <!-- Retourne l'ID de l'étudiant scanné -->
-    <p hidden>ID de l'étudiant: {{ idEtu }}</p>
+    <!-- Retourne le nom de l'étudiant scanné -->
+    <p>{{ nameMat }}</p>
   </div>
 
   <div class="flex flex-center q-my-md">
@@ -139,8 +139,8 @@ export default defineComponent({
       retour: false,
       imageSrc: '',
       resEmp: null,
-      idEtu: '', // resultat du QR code scanné
-      idMat: '', // resultat du QR code scanné
+      idEtu: '', // résultat du QR code scanné
+      idMat: '', // résultat du QR code scanné
       nameMat: '',
       listIdMat: [],
       listNameMat: [],
@@ -239,6 +239,7 @@ export default defineComponent({
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idEtu = result.text
+          this.getMaterielFromAPI((this.idEtu))
         },
         error => {
           alert('Scan raté: ' + error)
@@ -251,7 +252,6 @@ export default defineComponent({
           saveHistory: true, // Android, enregistrer l'historique de scan
           prompt: 'Placez le QR code à l\'intérieur de la zone', // Android
           resultDisplayDuration: 1000, // Android, affiche le texte scanné pendant 1s en bas avant d'afficher l'alerte
-          // formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
           orientation: 'portrait', // Android uniquement (portrait|landscape), par défaut non réglé pour qu'il tourne avec le téléphone
           disableAnimations: true, // iOS
           disableSuccessBeep: true // iOS et Android
@@ -275,7 +275,6 @@ export default defineComponent({
           saveHistory: true, // Android, enregistrer l'historique de scan
           prompt: 'Placez le QR code à l\'intérieur de la zone', // Android
           resultDisplayDuration: 1000, // Android, affiche le texte scanné pendant 1s en bas avant d'afficher l'alerte
-          // formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
           orientation: 'portrait', // Android uniquement (portrait|landscape), par défaut non réglé pour qu'il tourne avec le téléphone
           disableAnimations: true, // iOS
           disableSuccessBeep: true // iOS et Android
