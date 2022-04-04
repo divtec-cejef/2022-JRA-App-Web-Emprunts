@@ -17,7 +17,7 @@
 
   <div class="flex flex-center q-my-md q-mt-xl">
     <div style="max-width: 200px" class="q-mx-md">
-      <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant" @update:model-value="getMaterielFromAPI(idEtu)"/>
+      <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant" @update:model-value="getMaterielEtudiant(idEtu)"/>
     </div>
 
     <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant
@@ -227,7 +227,7 @@ export default defineComponent({
       document.addEventListener('resume', this.registerTagEvent, false)
     },
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
-    getMaterielFromAPI (id) {
+    getMaterielEtudiant (id) {
       apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(nomMat => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
@@ -239,7 +239,7 @@ export default defineComponent({
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idEtu = result.text
-          this.getMaterielFromAPI((this.idEtu))
+          this.getMaterielEtudiant((this.idEtu))
         },
         error => {
           alert('Scan raté: ' + error)
@@ -284,8 +284,7 @@ export default defineComponent({
     postEmprunt () {
       // Réinitialser la variable avec aucune valeur dedans
       this.resEmp = null
-      // idUser: "73be4c03"
-      // idDevice: "2bf8991d"
+
       // Création d'un formulaire pour envoyer dans la requête
       const formData = new FormData()
       // Ajout des données dans le formulaire
@@ -319,7 +318,7 @@ export default defineComponent({
           this.alert = true
         }).catch((err) => {
           this.errorId = true
-          this.getMaterielFromAPI(idMat)
+          this.getMaterielEtudiant(idMat)
           this.resEmp = err.response.status
           this.alert = true
         })
