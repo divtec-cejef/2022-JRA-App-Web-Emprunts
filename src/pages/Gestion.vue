@@ -228,7 +228,7 @@ export default defineComponent({
     },
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
     getMaterielFromAPI (id) {
-      apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(nomMat => {
+      apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(nomMat => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
         this.nameMat = nomMat.data.split(',')[1]
@@ -298,7 +298,7 @@ export default defineComponent({
           formData.append('ret', '')
         }
         // Création de la requête complète
-        apiGeFoPro.post('/ELT/rest/borrow.php',
+        apiGeFoPro.post('/INF/rest/borrow.php',
           // Paramètres de la requête
           formData,
           {
