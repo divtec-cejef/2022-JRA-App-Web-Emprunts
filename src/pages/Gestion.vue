@@ -17,26 +17,29 @@
 
   <div class="flex flex-center q-my-md q-mt-xl">
     <div style="max-width: 200px" class="q-mx-md">
-      <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant" @update:model-value="getMaterielEtudiant(idEtu)"/>
+      <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant" @update:model-value="getStudent(idEtu)"/>
     </div>
 
     <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant
     uniquement visible sur mobile -->
-    <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanEtudiant"/>
+    <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanStudent"/>
 
     <!-- Retourne le nom de l'étudiant scanné -->
-    <p>{{ nameMat }}</p>
+    <p>{{ nameStu }}</p>
   </div>
 
   <div class="flex flex-center q-my-md">
 
     <div style="max-width: 200px" class="q-mx-md">
-      <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"/>
+      <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"  @update:model-value="getMaterial(idMat)"/>
     </div>
 
     <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel
      uniquement visible sur mobile -->
-    <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanMateriel"/>
+    <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanMaterial"/>
+
+    <!-- Retourne le nom du matériel scanné et l'affiche uniquement si le champ contient une donnée -->
+    <p v-if="idMat!==''">{{ nameMat }}</p>
   </div>
 
   <div v-if="this.idMat!==''" class="flex flex-center q-my-md">
@@ -82,7 +85,7 @@
   <q-dialog v-model="alert">
     <q-card>
       <q-card-section>
-        <div class="text-h6">Information</div>
+        <div class="text-h6">{{ empRet.toUpperCase() }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
@@ -142,6 +145,7 @@ export default defineComponent({
       idEtu: '', // résultat du QR code scanné
       idMat: '', // résultat du QR code scanné
       nameMat: '',
+      nameStu: '',
       listIdMat: [],
       listNameMat: [],
       errorId: false,
@@ -227,19 +231,33 @@ export default defineComponent({
       document.addEventListener('resume', this.registerTagEvent, false)
     },
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
-    getMaterielEtudiant (id) {
-      apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(nomMat => {
+    getStudent (id) {
+      // Vider le contenu de la variable
+      this.nameStu = ''
+
+      apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
-        this.nameMat = nomMat.data.split(',')[1]
+        this.nameStu = name.data.split(',')[1]
+      })
+    },
+    // Méthode pour obtenir le nom de l'étudiant depuis son ID
+    getMaterial (id) {
+      // Vider le contenu de la variable
+      this.nameMat = ''
+
+      apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(name => {
+        // Afficher le résultat de la requête avec l'ID
+        // Afficher l'ID et le modèle
+        this.nameMat = name.data.split(',')[1]
       })
     },
     // Méthode pour scanner un QR code de l'étudiant
-    scanEtudiant () {
+    scanStudent () {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idEtu = result.text
-          this.getMaterielEtudiant((this.idEtu))
+          this.getStudent((this.idEtu))
         },
         error => {
           alert('Scan raté: ' + error)
@@ -259,10 +277,11 @@ export default defineComponent({
       )
     },
     // Méthode pour scanner un QR code de l'étudiant
-    scanMateriel () {
+    scanMaterial () {
       cordova.plugins.barcodeScanner.scan(
         result => {
           this.idMat = result.text
+          this.getMaterial((this.idMat))
         },
         error => {
           alert('Scan raté: ' + error)
@@ -297,7 +316,7 @@ export default defineComponent({
           formData.append('ret', '')
         }
         // Création de la requête complète
-        apiGeFoPro.post('/INF/rest/borrow.php',
+        apiGeFoPro.post('/ELT/rest/borrow.php',
           // Paramètres de la requête
           formData,
           {
@@ -318,7 +337,7 @@ export default defineComponent({
           this.alert = true
         }).catch((err) => {
           this.errorId = true
-          this.getMaterielEtudiant(idMat)
+          this.getMaterial(idMat)
           this.resEmp = err.response.status
           this.alert = true
         })
