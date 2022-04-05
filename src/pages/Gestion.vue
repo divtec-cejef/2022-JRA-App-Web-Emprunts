@@ -89,7 +89,7 @@
           <q-item>
             <q-item-section>
               <!-- Condition qui change le message en fonction du code erreur -->
-              <p v-if="resEmp===403">Erreur {{ resEmp }} : {{ nameMat }}appareil déjà prêté ou retour d’un appareil non prêté</p>
+              <p v-if="resEmp===403">Erreur {{ resEmp }} : appareil déjà prêté ou retour d’un appareil non prêté</p>
               <p v-else-if="resEmp===404">Erreur {{ resEmp }} : identifiant(s) non trouvé(s)</p>
               <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
 
