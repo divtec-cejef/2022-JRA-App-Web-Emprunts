@@ -71,9 +71,6 @@
     />
   </div>
 
-  <!-- Afficher avec une variable quel choix est sélectionné -->
-  <p hidden>{{ empRet }}</p>
-
   <div class="flex flex-center q-pa-md">
     <!-- Bouton pour envoyer la requête POST @click="alert = true" -->
     <q-btn color="primary" @click="postEmprunt">
@@ -96,11 +93,14 @@
               </div>
             </q-item-section>
             <q-item-section v-else>
+              <div v-for="name in listTest" :key="name">
+                {{ name }}
+              </div>
               <!-- Condition qui change le message en fonction du code erreur -->
-              <p v-if="resEmp===403">Erreur {{ resEmp }} : {{ nameMat }} appareil déjà prêté ou retour d’un appareil non prêté</p>
+              <p v-if="resEmp===403">Erreur {{ resEmp }} :</p>
               <p v-else-if="resEmp===404">Erreur {{ resEmp }} : identifiant(s) non trouvé(s)</p>
               <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
-              <h8>Requête(s) validée(s) :</h8>
+              <p>Requête(s) validée(s) :</p>
               <div v-for="name in listNameMat" :key="name">
                 {{ name }}
               </div>
@@ -138,6 +138,7 @@ export default defineComponent({
   // Déclaration des données
   data () {
     return {
+      listTest: [],
       compatible: true,
       nfc_disabled: false,
       tagId: '',
@@ -177,6 +178,7 @@ export default defineComponent({
     resetLists () {
       this.listIdMat = []
       this.listNameMat = []
+      this.listTest = []
     },
 
     registerTagEvent () {
@@ -258,6 +260,9 @@ export default defineComponent({
         // Afficher le résultat de la requête avec l'ID
         // Afficher l'ID et le modèle
         this.nameMat = name.data.split(',')[1]
+        if (this.errorId) {
+          this.listTest.push(this.nameMat)
+        }
       })
     },
     // Méthode pour scanner un QR code de l'étudiant
