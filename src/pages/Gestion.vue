@@ -33,7 +33,6 @@
     <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"  @update:model-value="getMaterial(idMat)"/>
     </div>
-
     <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel
      uniquement visible sur mobile -->
     <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanMaterial"/>
@@ -98,9 +97,13 @@
             </q-item-section>
             <q-item-section v-else>
               <!-- Condition qui change le message en fonction du code erreur -->
-              <p v-if="resEmp===403">Erreur {{ resEmp }} : {{nameMat}} appareil déjà prêté ou retour d’un appareil non prêté</p>
+              <p v-if="resEmp===403">Erreur {{ resEmp }} : {{ nameMat }} appareil déjà prêté ou retour d’un appareil non prêté</p>
               <p v-else-if="resEmp===404">Erreur {{ resEmp }} : identifiant(s) non trouvé(s)</p>
               <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
+              <h8>Requête(s) validée(s) :</h8>
+              <div v-for="name in listNameMat" :key="name">
+                {{ name }}
+              </div>
             </q-item-section>
           </q-item>
         </q-list>
@@ -201,7 +204,12 @@ export default defineComponent({
       this.tagId = ''
       // eslint-disable-next-line no-undef
       this.tagId = nfc.bytesToHexString(tag.id)
-      this.idEtu = this.tagId
+      if (this.idEtu === '') {
+        this.idEtu = this.tagId
+      } else {
+        this.idMat = this.tagId
+      }
+
       // Ajouter la nouvelle balise à la liste sauvegardée
       this.items.push(this.tagId)
       // Afficher le tag Id dans la console
