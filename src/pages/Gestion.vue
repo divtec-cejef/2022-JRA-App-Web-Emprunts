@@ -199,8 +199,10 @@ export default defineComponent({
       this.tagId = nfc.bytesToHexString(tag.id)
       if (this.idEtu === '') {
         this.idEtu = this.tagId
+        this.getStudent((this.idEtu))
       } else {
         this.idMat = this.tagId
+        this.getMaterial((this.idMat))
       }
 
       // Ajouter la nouvelle balise à la liste sauvegardée
@@ -236,7 +238,7 @@ export default defineComponent({
       // Vider le contenu de la variable
       this.nameStu = ''
 
-      apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(name => {
+      apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
         this.nameStu = name.data.split(',')[1]
@@ -247,7 +249,7 @@ export default defineComponent({
       // Vider le contenu de la variable
       this.nameMat = ''
 
-      apiGeFoPro.get('/ELT/rest/idreq.php?id=' + id).then(name => {
+      apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher l'ID et le modèle
         this.nameMat = name.data.split(',')[1]
@@ -317,7 +319,7 @@ export default defineComponent({
           formData.append('ret', '')
         }
         // Création de la requête complète
-        apiGeFoPro.post('/ELT/rest/borrow.php',
+        apiGeFoPro.post('/INF/rest/borrow.php',
           // Paramètres de la requête
           formData,
           {
