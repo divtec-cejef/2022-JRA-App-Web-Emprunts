@@ -41,11 +41,11 @@
     <p v-if="idMat!==''">{{ nameMat }}</p>
   </div>
 
+  <!-- Change le texte et l'icone du bouton si le champ matériel est vide ou pas -->
   <div v-if="this.idMat!==''" class="flex flex-center q-my-md">
     <label class="q-pa-md">Ajoutez le matériel</label>
     <q-btn icon="check" color="primary" @click="initIdMat"/>
   </div>
-
   <div v-else class="flex flex-center q-my-md">
     <label class="q-pa-md">Supprimer la liste</label>
     <q-btn icon="clear" color="primary" @click="this.listIdMat=[]"/>
@@ -72,7 +72,7 @@
   </div>
 
   <div class="flex flex-center q-pa-md">
-    <!-- Bouton pour envoyer la requête POST @click="alert = true" -->
+    <!-- Bouton pour envoyer la requête POST -->
     <q-btn color="primary" @click="postEmprunt">
       {{ empRet }}
     </q-btn>
@@ -93,6 +93,7 @@
               <p v-else-if="resEmp===404">Erreur {{ resEmp }} : identifiant(s) non trouvé(s)</p>
               <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
 
+              <!-- Affiche toutes les requêtes même si une requête ne passe pas -->
               <p>Requête(s) validée(s) :</p>
               <div v-for="name in listNameMat" :key="name">
                 {{ name }}
@@ -103,6 +104,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
+        <!-- Vide les listes quand on ferme la pop-up -->
         <q-btn flat label="OK" color="primary" v-close-popup @click="resetLists"/>
       </q-card-actions>
     </q-card>
