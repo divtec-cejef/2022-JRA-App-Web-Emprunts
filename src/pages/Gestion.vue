@@ -53,7 +53,7 @@
 
   <!-- Retourne l'ID du matériel scanné -->
   <q-list class="text-center">
-    <q-item v-for="mat in listIdMat" :key="mat">
+    <q-item v-for="mat in listMat" :key="mat">
       <q-item-section>
         {{ mat }}
       </q-item-section>
@@ -146,6 +146,7 @@ export default defineComponent({
       nameStu: '',
       listIdMat: [],
       listNameMat: [],
+      listMat: [],
       errorId: false,
       description: ''
     }
@@ -166,12 +167,14 @@ export default defineComponent({
     initIdMat () {
       this.listIdMat.push(this.idMat)
       this.idMat = ''
+      this.listMat.push(this.nameMat)
     },
 
     // Vider les 2 listes
     resetLists () {
       this.listIdMat = []
       this.listNameMat = []
+      this.listMat = []
     },
 
     registerTagEvent () {
@@ -239,11 +242,10 @@ export default defineComponent({
     getStudent (id) {
       // Vider le contenu de la variable
       this.nameStu = ''
-
       apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
-        this.nameStu = name.data.split(',')[1]
+        decodeURIComponent(this.nameStu = name.data.split(',')[1])
       })
     },
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
