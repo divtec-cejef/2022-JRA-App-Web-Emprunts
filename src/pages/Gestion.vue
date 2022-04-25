@@ -1,7 +1,7 @@
 <!--
   Auteur: Sévan Bendit
   Date: 15.03.2022
-  Description: Page pour scanner un QR code
+  Description: Page de gestion des emprunts et retours
  -->
 
 <template>
