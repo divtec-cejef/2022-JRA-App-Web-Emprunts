@@ -310,7 +310,7 @@ export default defineComponent({
     postEmprunt () {
       // Réinitialser la variable avec aucune valeur dedans
       this.resEmp = null
-      this.test = null
+      this.errorCode = null
 
       // Création d'un formulaire pour envoyer dans la requête
       const formData = new FormData()
