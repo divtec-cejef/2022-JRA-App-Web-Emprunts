@@ -7,7 +7,7 @@ const routes = [
     children: [
       { // accueil
         path: '',
-        component: () => import('pages/Gestion.vue')
+        component: () => import('pages/Connexion.vue')
       },
       { // Tout le monde du moment qu'il est connecté avec son login DIVTEC
         path: '/gestion',
