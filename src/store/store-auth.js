@@ -52,7 +52,7 @@ const actions = {
       .then(function (response) {
         dispatch('setUtilisateur', response.data.token)
         // Redirige l'utilisateur vers la page d'accueil
-        that.$router.push(that.$router.currentRoute.value.query.returnUrl || '/')
+        that.$router.push('/gestion')
         // Cache la fenêtre de chargement
         Loading.hide()
       })
