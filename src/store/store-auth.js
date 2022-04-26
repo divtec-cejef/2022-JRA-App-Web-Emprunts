@@ -59,7 +59,7 @@ const actions = {
       .catch(function (error) {
         dispatch('clearUtilisateur')
         Loading.hide()
-        afficherMessageErreur('Connexion impossible !', Object.values(error.response.data))
+        afficherMessageErreur('Connexion impossible !')
         throw error
       })
   },

@@ -48,7 +48,7 @@
   </div>
   <div v-else class="flex flex-center q-my-md">
     <label class="q-pa-md">Supprimer la liste</label>
-    <q-btn icon="clear" color="primary" @click="this.listIdMat=[]"/>
+    <q-btn icon="clear" color="primary" @click="resetLists"/>
   </div>
 
   <!-- Retourne l'ID du matériel scanné -->
@@ -89,9 +89,9 @@
           <q-item>
             <q-item-section>
               <!-- Condition qui change le message en fonction du code erreur -->
-              <p v-if="resEmp===403">Erreur {{ resEmp }} : appareil déjà prêté ou retour d’un appareil non prêté</p>
-              <p v-else-if="resEmp===404">Erreur {{ resEmp }} : identifiant(s) non trouvé(s)</p>
-              <p v-else-if="resEmp===500">le requête n’a pas pu être enregistré sur le serveur</p>
+              <p v-if="errorCode===403">Erreur {{ errorCode }} : appareil déjà prêté ou retour d’un appareil non prêté</p>
+              <p v-else-if="errorCode===404">Erreur {{ errorCode }} : identifiant(s) non trouvé(s)</p>
+              <p v-else-if="errorCode===500">le requête n’a pas pu être enregistré sur le serveur</p>
 
               <!-- Affiche toutes les requêtes même si une requête ne passe pas -->
               <p>Requête(s) validée(s) :</p>
@@ -147,7 +147,7 @@ export default defineComponent({
       listIdMat: [],
       listNameMat: [],
       listMat: [],
-      errorId: false,
+      errorCode: null,
       description: ''
     }
   },
@@ -310,6 +310,7 @@ export default defineComponent({
     postEmprunt () {
       // Réinitialser la variable avec aucune valeur dedans
       this.resEmp = null
+      this.test = null
 
       // Création d'un formulaire pour envoyer dans la requête
       const formData = new FormData()
@@ -339,13 +340,10 @@ export default defineComponent({
 
           // Ajout le nom de l'article à une liste pour afficher tous les articles
           this.listNameMat.push(this.resEmp)
-
-          this.errorId = false
           this.alert = true
         }).catch((err) => {
-          this.errorId = true
           this.getMaterial(idMat)
-          this.resEmp = err.response.status
+          this.errorCode = err.response.status
           this.alert = true
         })
       })
