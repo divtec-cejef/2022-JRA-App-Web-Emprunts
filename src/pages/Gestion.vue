@@ -135,20 +135,17 @@ export default defineComponent({
     return {
       compatible: true,
       nfc_disabled: false,
-      tagId: '',
-      res: '',
+      tagId: '', // ID retourné du scan de NFC
       retour: false,
-      imageSrc: '',
       resEmp: null,
-      idEtu: '', // résultat du QR code scanné
-      idMat: '', // résultat du QR code scanné
-      nameMat: '',
-      nameStu: '',
-      listIdMat: [],
-      listNameMat: [],
-      listMat: [],
-      errorCode: null,
-      description: ''
+      idEtu: '', // Résultat du QR code scanné
+      idMat: '', // Résultat du QR code scanné
+      nameMat: '', // Nom du matériel scanné
+      nameStu: '', // Nom de l'étudiant scanné
+      listIdMat: [], // Liste des ID des matériaux scannés
+      listNameMat: [], // Liste des noms des matériaux scannés
+      listMat: [], // Liste pour afficher l'identifiant du matériel
+      errorCode: null // Code de l'erreur si un ID n'est pas pas correct
     }
   },
   mounted () {
