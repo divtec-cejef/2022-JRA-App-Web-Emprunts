@@ -9,7 +9,6 @@
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-navigation href="about:*" />
-    <plugin name="cordova-plugin-camera" spec="^2.4.1" />
     <plugin name="phonegap-plugin-barcodescanner" />
     <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
         <string>To scan barcodes</string>
