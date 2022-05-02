@@ -7,6 +7,8 @@ import axios from 'axios'
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
+
+// API pour gérer l'authentifaction faite par M. Fallet
 const api = axios.create({
   baseURL: 'https://api.divtec.ch:8443/',
   timeout: 30000,
@@ -16,6 +18,7 @@ const api = axios.create({
   }
 })
 
+// API pour gérer les emrpunts et les retours
 const apiGeFoPro = axios.create({
   baseURL: 'https://ateliers.divtec.ch',
   headers: {

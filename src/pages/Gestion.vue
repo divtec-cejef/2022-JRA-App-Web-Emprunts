@@ -1,7 +1,8 @@
 <!--
   Auteur: Sévan Bendit
-  Date: 15.03.2022
+  Date: 03.05.2022
   Description: Page de gestion des emprunts et retours
+  Seule page entièrement réalisée par Sévan Bendit
  -->
 
 <template>
@@ -20,7 +21,7 @@
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant" @update:model-value="getStudent(idEtu)"/>
     </div>
 
-    <!-- Bouton qui éxecute la méthode pour scanner le QR code de l'étudiant
+    <!-- Bouton qui execute la méthode pour scanner le QR code de l'étudiant
     uniquement visible sur mobile -->
     <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanStudent"/>
 
@@ -33,7 +34,7 @@
     <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idMat" :model-value="idMat" label="ID matériel"  @update:model-value="getMaterial(idMat)"/>
     </div>
-    <!-- Bouton qui éxecute la méthode pour scanner le QR code du matériel
+    <!-- Bouton qui execute la méthode pour scanner le QR code du matériel
      uniquement visible sur mobile -->
     <q-btn v-if="$q.platform.is.mobile" color="primary" class="q-mx-md" label="Scan" @click="scanMaterial"/>
 
@@ -41,7 +42,7 @@
     <p v-if="idMat!==''">{{ nameMat }}</p>
   </div>
 
-  <!-- Change le texte et l'icone du bouton si le champ matériel est vide ou pas -->
+  <!-- Change le texte et l'icône du bouton si le champ matériel est vide ou pas -->
   <div v-if="this.idMat!==''" class="flex flex-center q-my-md">
     <label class="q-pa-md">Ajoutez le matériel</label>
     <q-btn icon="check" color="primary" @click="initIdMat"/>
@@ -73,7 +74,7 @@
 
   <div class="flex flex-center q-pa-md">
     <!-- Bouton pour envoyer la requête POST -->
-    <q-btn color="primary" @click="postEmprunt">
+    <q-btn color="primary" @click="postBorrowReturn">
       {{ empRet }}
     </q-btn>
   </div>
@@ -93,7 +94,7 @@
               <p v-else-if="errorCode===404">Erreur {{ errorCode }} : identifiant(s) non trouvé(s)</p>
               <p v-else-if="errorCode===500">le requête n’a pas pu être enregistré sur le serveur</p>
 
-              <!-- Affiche toutes les requêtes même si une requête ne passe pas -->
+              <!-- Afficher les requêtes validées -->
               <p>Requête(s) validée(s) :</p>
               <div v-for="name in listNameMat" :key="name">
                 {{ name }}
@@ -115,6 +116,8 @@
 <script>
 // Importation de les éléments
 import { defineComponent, ref } from 'vue'
+
+// API GeFoPro pour la gestion du matériel
 import { apiGeFoPro } from 'boot/axios'
 
 export default defineComponent({
@@ -137,7 +140,7 @@ export default defineComponent({
       nfc_disabled: false,
       tagId: '', // ID retourné du scan de NFC
       retour: false,
-      resEmp: null,
+      responseBorrowReturn: null, // Réponse de la requête POST
       idEtu: '', // Résultat du QR code scanné
       idMat: '', // Résultat du QR code scanné
       nameMat: '', // Nom du matériel scanné
@@ -160,14 +163,14 @@ export default defineComponent({
   // Déclaration des méthodes
   methods: {
 
-    // Ajouter l'id du matétiel à la liste et vider le champs
+    // Ajouter l'id du matétiel à la liste et vider le champ
     initIdMat () {
       this.listIdMat.push(this.idMat)
       this.idMat = ''
       this.listMat.push(this.nameMat)
     },
 
-    // Vider les 2 listes
+    // Vider les 3 listes
     resetLists () {
       this.listIdMat = []
       this.listNameMat = []
@@ -199,6 +202,8 @@ export default defineComponent({
       this.tagId = ''
       // eslint-disable-next-line no-undef
       this.tagId = nfc.bytesToHexString(tag.id)
+      // Si le champ de l'étudiant est vide le tag NFC remplit ce champ
+      // Sinon il remplit le champ du matériel
       if (this.idEtu === '') {
         this.idEtu = this.tagId
         this.getStudent((this.idEtu))
@@ -239,6 +244,7 @@ export default defineComponent({
     getStudent (id) {
       // Vider le contenu de la variable
       this.nameStu = ''
+      // INF signifie la section
       apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
@@ -250,6 +256,7 @@ export default defineComponent({
       // Vider le contenu de la variable
       this.nameMat = ''
 
+      // INF signifie la section
       apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher l'ID et le modèle
@@ -270,7 +277,7 @@ export default defineComponent({
           preferFrontCamera: false, // iOS et Android
           showFlipCameraButton: true, // iOS et Android
           showTorchButton: true, // iOS et Android
-          torchOn: false, // Android, au lancement le flash est allumé
+          torchOn: false, // Android, au lancement le flash est éteint
           saveHistory: true, // Android, enregistrer l'historique de scan
           prompt: 'Placez le QR code à l\'intérieur de la zone', // Android
           resultDisplayDuration: 1000, // Android, affiche le texte scanné pendant 1s en bas avant d'afficher l'alerte
@@ -280,7 +287,7 @@ export default defineComponent({
         }
       )
     },
-    // Méthode pour scanner un QR code de l'étudiant
+    // Méthode pour scanner un QR code du matériel
     scanMaterial () {
       cordova.plugins.barcodeScanner.scan(
         result => {
@@ -294,7 +301,7 @@ export default defineComponent({
           preferFrontCamera: false, // iOS et Android
           showFlipCameraButton: true, // iOS et Android
           showTorchButton: true, // iOS et Android
-          torchOn: false, // Android, au lancement le flash est allumé
+          torchOn: false, // Android, au lancement le flash est éteint
           saveHistory: true, // Android, enregistrer l'historique de scan
           prompt: 'Placez le QR code à l\'intérieur de la zone', // Android
           resultDisplayDuration: 1000, // Android, affiche le texte scanné pendant 1s en bas avant d'afficher l'alerte
@@ -304,9 +311,10 @@ export default defineComponent({
         }
       )
     },
-    postEmprunt () {
-      // Réinitialser la variable avec aucune valeur dedans
-      this.resEmp = null
+    // Méthode qui va enregistrer un emprunt ou un retour
+    postBorrowReturn () {
+      // Réinitialiser la variable avec aucune valeur dedans
+      this.responseBorrowReturn = null
       this.errorCode = null
 
       // Création d'un formulaire pour envoyer dans la requête
@@ -314,6 +322,7 @@ export default defineComponent({
       // Ajout des données dans le formulaire
       formData.append('idUser', this.idEtu)
 
+      // Parcourir la liste pour envoyer toutes les requêtes si plusieurs matériels
       this.listIdMat.forEach(idMat => {
         formData.append('idDevice', idMat)
         // Ajout d'un paramètre uniquement si le bouton "Retour" est choisi
@@ -329,16 +338,17 @@ export default defineComponent({
               'Content-Type': 'application/x-www-form-urlencoded'
             }
           }
-        ).then((resEmp) => {
-          console.log(resEmp)
+        ).then((responseBorrowReturn) => {
+          console.log(responseBorrowReturn)
           // Nom du matériel
-          this.nameMat = resEmp.data.split(',')[2]
-          this.resEmp = resEmp.data.split(',')[2]
+          this.nameMat = responseBorrowReturn.data.split(',')[2]
+          this.responseBorrowReturn = responseBorrowReturn.data.split(',')[2]
 
           // Ajout le nom de l'article à une liste pour afficher tous les articles
-          this.listNameMat.push(this.resEmp)
+          this.listNameMat.push(this.responseBorrowReturn)
           this.alert = true
         }).catch((err) => {
+          // Connaitre le matériel qui pose problème
           this.getMaterial(idMat)
           this.errorCode = err.response.status
           this.alert = true
