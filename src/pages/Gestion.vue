@@ -135,7 +135,7 @@ export default defineComponent({
       ],
       model: ref(null),
       sections: [
-        'INF', 'ELT', 'AUT', 'HOR', 'LAB', 'HOP', 'PRM', 'MMC', 'DCM'
+        'INF', 'ELT', 'AUT', 'HOR', 'HOP', 'PRM', 'MMC', 'DCM'
       ]
     }
   },
