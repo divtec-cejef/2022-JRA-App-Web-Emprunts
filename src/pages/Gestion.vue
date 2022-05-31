@@ -19,6 +19,7 @@
   <div class="flex flex-center q-ma-xl">
     <q-select class="full-width" style="max-width: 200px" square outlined v-model="model" :options="sections" label="Section" />
   </div>
+
   <div class="flex flex-center q-my-md q-mt-xl">
     <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant" @update:model-value="getStudent(idEtu)"/>
@@ -252,7 +253,7 @@ export default defineComponent({
       // Vider le contenu de la variable
       this.nameStu = ''
       // INF signifie la section
-      decodeURI(apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
+      decodeURI(apiGeFoPro.get('/' + this.model + '/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
         this.nameStu = name.data.split(',')[1]
@@ -264,7 +265,7 @@ export default defineComponent({
       this.nameMat = ''
 
       // INF signifie la section
-      apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
+      apiGeFoPro.get('/' + this.model + '/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher l'ID et le modèle
         this.nameMat = name.data.split(',')[1]
@@ -337,7 +338,7 @@ export default defineComponent({
           formData.append('ret', '')
         }
         // Création de la requête complète
-        apiGeFoPro.post('/INF/rest/borrow.php',
+        apiGeFoPro.post('/' + this.model + '/rest/borrow.php',
           // Paramètres de la requête
           formData,
           {
