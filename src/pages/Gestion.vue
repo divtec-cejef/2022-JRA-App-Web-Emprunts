@@ -16,6 +16,9 @@
     </div>
   </div>
 
+  <div class="flex flex-center q-ma-xl">
+    <q-select class="full-width" style="max-width: 200px" square outlined v-model="model" :options="sections" label="Section" />
+  </div>
   <div class="flex flex-center q-my-md q-mt-xl">
     <div style="max-width: 200px" class="q-mx-md">
       <q-input outlined v-model="idEtu" :model-value="idEtu" label="ID étudiant" @update:model-value="getStudent(idEtu)"/>
@@ -128,6 +131,10 @@ export default defineComponent({
       options: [
         { label: 'Emprunt', value: 'emprunter', checkedIcon: 'task_alt' },
         { label: 'Retour', value: 'retourner', checkedIcon: 'task_alt' }
+      ],
+      model: ref(null),
+      sections: [
+        'INF', 'ELT', 'AUT', 'HOR', 'LAB', 'HOP', 'PRM', 'MMC', 'DCM'
       ]
     }
   },
@@ -245,11 +252,11 @@ export default defineComponent({
       // Vider le contenu de la variable
       this.nameStu = ''
       // INF signifie la section
-      apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
+      decodeURI(apiGeFoPro.get('/INF/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher uniquement le nom et prénom
-        decodeURIComponent(this.nameStu = name.data.split(',')[1])
-      })
+        this.nameStu = name.data.split(',')[1]
+      }))
     },
     // Méthode pour obtenir le nom de l'étudiant depuis son ID
     getMaterial (id) {

@@ -10,7 +10,7 @@ import axios from 'axios'
 
 // API pour gérer l'authentifaction faite par M. Fallet
 const api = axios.create({
-  baseURL: 'https://api.divtec.ch:8443/',
+  baseURL: 'http://api-int.divtec.local/',
   timeout: 30000,
   headers: {
     Accept: 'application/json',
