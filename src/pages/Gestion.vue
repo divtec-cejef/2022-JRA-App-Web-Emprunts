@@ -264,7 +264,7 @@ export default defineComponent({
       // Vider le contenu de la variable
       this.nameMat = ''
 
-      // INF signifie la section
+      // this.model signifie la section
       apiGeFoPro.get('/' + this.model + '/rest/idreq.php?id=' + id).then(name => {
         // Afficher le résultat de la requête avec l'ID
         // Afficher l'ID et le modèle
