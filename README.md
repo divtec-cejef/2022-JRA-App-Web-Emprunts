@@ -1,49 +1,61 @@
-# Client web Qasar de base de la DIVTEC
+# Application gestion des emprunts et des retours de la section informatique
 
 ## Présentation
-Vous pouvez utiliser la version 0.0.1 de ce projet comme base de départ pour votre application Quasar.
+L'application a pour but de gérer les emprunts et les retours de la section informatique. La partie authentification a été developpé par M. Fallet et m'a été fourni fonctionnelle. La seule partie réalisée par moi a été la page gestion. Cette page gère l'enregistrement des emprunts et des retours. (https://github.com/divtec-cejef/2022-JRA-App-Web-Emprunts/blob/multiple-articles/src/pages/Gestion.vue)
 
-Sur cette version, l’authentification n’est pas encore fonctionnelle.
+La branche principale correspond à "multiple-articles".
 
-En attendant, vous pouvez créer de nouvelles pages sans protection en suivant cette procédure :
-
-1. Créer un composant dans le dossier `src/pages` en dupliquant le fichier  `Index.vue`
-1. Définir la route vers votre page dans le fichier  `src/routes.js`
-  - Créer la route pour votre page en ajoutant une entrée dans le tableau  `children`.
-  -  La propriété `meta` d’une route permet de définir les rôles autorisés à consulter une page.
-  -  Pour l’instant pas besoin de la définir pour votre route, qui sera donc accessible par tous.
-
-1. Ajouter un lien au menu
-1. Ouvrir le composant  `src/layouts/MainLayout.vue` et ajouter votre page dans le tableau `liens` à la `ligne 68`.
-  - Laisser la propriété `roles` à `null` pour votre page.
-
-Pour construire et exécuter votre application, voir le fichier `README.md`.
-
-La configuration de l’api DIVTEC se trouve dans le dossier `src/boot/axios.js` mais n’est actuellement pas fonctionnelle.
-
-Les fonctions, méthodes globales sont définies dans le dossier `src/functions` et les magasins vueX dans `src/store`.
-
-Les variables des couleurs DIVTEC ont été définies dans `src/css/quasar.variables.sass`.
-
-## Install the dependencies
+## Installer les dépendances
 ```bash
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+## Mise en place de cordova
+
+### Ajouter cordova au projet
 ```bash
-quasar dev
+quasar mode add cordova
 ```
 
-### Lint the files
+### Qu'elle est l’id Cordova de l’application ?
 ```bash
-npm run lint
+ch.divtec.bendsev.emprunts
 ```
 
-### Build the app for production
+### Aller dans le nouveau dossier src-cordova
 ```bash
-quasar build
+cd src-cordova
 ```
 
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+### Ajouter Android au projet Cordova
+```bash
+cordova platform add android
+```
+
+### Ajouter iOS au projet Cordova
+```bash
+cordova platform add ios
+```
+
+### Ajouter un plugin pour le scan des QR codes
+```bash
+cordova plugin add phonegap-plugin-barcodescanner
+```
+
+### Ajouter un plugin pour le scan de puces NFC
+```bash
+cordova plugin add phonegap-nfc
+```
+
+### Builder l'application pour Android
+```bash
+quasar build -m android
+```
+
+### Builder l'application pour iOS
+```bash
+quasar build -m ios
+```
+
+
+
