@@ -8,7 +8,7 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-// API pour gérer l'authentifaction faite par M. Fallet
+// API pour gérer l'authentifaction réalisée par M. Fallet
 const api = axios.create({
   baseURL: 'https://api.divtec.ch:8443/',
   timeout: 30000,
